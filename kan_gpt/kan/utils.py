@@ -23,7 +23,7 @@ SYMBOLIC_LIB = {
     "tan": (lambda x: torch.tan(x), lambda x: sympy.tan(x)),
     "tanh": (lambda x: torch.tanh(x), lambda x: sympy.tanh(x)),
     "sigmoid": (lambda x: torch.sigmoid(x), sympy.Function("sigmoid")),
-    #'relu': (lambda x: torch.relu(x), relu),
+    # 'relu': (lambda x: torch.relu(x), relu),
     "sgn": (lambda x: torch.sign(x), lambda x: sympy.sign(x)),
     "arcsin": (lambda x: torch.arcsin(x), lambda x: sympy.arcsin(x)),
     "arctan": (lambda x: torch.arctan(x), lambda x: sympy.atan(x)),
@@ -31,8 +31,8 @@ SYMBOLIC_LIB = {
     "0": (lambda x: x * 0, lambda x: x * 0),
     "gaussian": (lambda x: torch.exp(-(x**2)), lambda x: sympy.exp(-(x**2))),
     "cosh": (lambda x: torch.cosh(x), lambda x: sympy.cosh(x)),
-    #'logcosh': (lambda x: torch.log(torch.cosh(x)), lambda x: sympy.log(sympy.cosh(x))),
-    #'cosh^2': (lambda x: torch.cosh(x)**2, lambda x: sympy.cosh(x)**2),
+    # 'logcosh': (lambda x: torch.log(torch.cosh(x)), lambda x: sympy.log(sympy.cosh(x))),
+    # 'cosh^2': (lambda x: torch.cosh(x)**2, lambda x: sympy.cosh(x)**2),
 }
 
 

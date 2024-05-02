@@ -141,7 +141,7 @@ class KAN(nn.Module):
         np.random.seed(seed)
         random.seed(seed)
 
-        ### initializeing the numerical front ###
+        # initializeing the numerical front ###
 
         self.biases = []
         self.act_fun = []
@@ -191,7 +191,7 @@ class KAN(nn.Module):
         self.k = k
         self.base_fun = base_fun
 
-        ### initializing the symbolic front ###
+        # initializing the symbolic front ###
         self.symbolic_fun = []
         for l in range(self.depth):
             sb_batch = Symbolic_KANLayer(in_dim=width[l], out_dim=width[l + 1])
@@ -918,7 +918,7 @@ class KAN(nn.Module):
                     if mask == False:
                         newax.imshow(im, alpha=alpha[l][j][i])
                     else:
-                        ### make sure to run model.prune() first to compute mask ###
+                        # make sure to run model.prune() first to compute mask ###
                         newax.imshow(
                             im,
                             alpha=alpha[l][j][i]

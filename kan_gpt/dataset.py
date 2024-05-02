@@ -4,9 +4,7 @@ import pickle
 import pandas as pd
 import torch
 from torch.utils.data import Dataset
-from transformers import GPT2LMHeadModel, GPT2Tokenizer
-
-from kan_gpt.mingpt.bpe import BPETokenizer
+from transformers import GPT2Tokenizer
 
 
 class WebTextDataset(Dataset):
