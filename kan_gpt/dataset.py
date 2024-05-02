@@ -1,6 +1,7 @@
 import os
 import pickle
 
+from tqdm import tqdm
 import pandas as pd
 import torch
 from torch.utils.data import Dataset
@@ -37,7 +38,7 @@ class WebTextDataset(Dataset):
             tokenized_data = []
             tokenized_lengths = []
 
-            for _, row in self.data.iterrows():
+            for _, row in tqdm(self.data.iterrows(), "Tokenizing"):
                 text = row["text"]
 
                 tokenized = self.tokenizer.encode(
@@ -56,7 +57,7 @@ class WebTextDataset(Dataset):
                 "y": [],
             }
 
-            for _, row in self.data.iterrows():
+            for _, row in tqdm(self.data.iterrows(), "Caching chunks"):
                 tokenized = row["tokenized"]
                 tokenized_length = row["tokenized_length"]
 
