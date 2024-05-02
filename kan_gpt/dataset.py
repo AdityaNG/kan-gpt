@@ -1,10 +1,10 @@
 import os
 import pickle
 
-from tqdm import tqdm
 import pandas as pd
 import torch
 from torch.utils.data import Dataset
+from tqdm import tqdm
 from transformers import GPT2Tokenizer
 
 
@@ -38,7 +38,9 @@ class WebTextDataset(Dataset):
             tokenized_data = []
             tokenized_lengths = []
 
-            for _, row in tqdm(self.data.iterrows(), "Tokenizing"):
+            for _, row in tqdm(
+                self.data.iterrows(), desc="Tokenizing", total=len(self.data)
+            ):
                 text = row["text"]
 
                 tokenized = self.tokenizer.encode(
@@ -57,7 +59,11 @@ class WebTextDataset(Dataset):
                 "y": [],
             }
 
-            for _, row in tqdm(self.data.iterrows(), "Caching chunks"):
+            for _, row in tqdm(
+                self.data.iterrows(),
+                desc="Caching chunks",
+                total=len(self.data),
+            ):
                 tokenized = row["tokenized"]
                 tokenized_length = row["tokenized_length"]
 

@@ -1,13 +1,12 @@
 import torch
 from torch.utils.data.dataloader import DataLoader
 
+import wandb
 from kan_gpt.dataset import WebTextDataset
 from kan_gpt.mingpt.model import GPT as MLP_GPT
 from kan_gpt.mingpt.trainer import Trainer
 from kan_gpt.mingpt.utils import set_seed
 from kan_gpt.model import GPT as KAN_GPT
-
-import wandb
 
 set_seed(3407)
 
@@ -24,7 +23,7 @@ def eval_split(
     for b, (x, y) in enumerate(loader):
         x = x.to(trainer.device)
         y = y.to(trainer.device)
-        
+
         logits, loss = model(x, y)
 
         results.append(loss)
@@ -32,10 +31,7 @@ def eval_split(
         if max_batches is not None and b + 1 >= max_batches:
             break
     rt = torch.tensor(results, dtype=torch.float)
-    print(
-        "%s loss: %.2f%%"
-        % (split, rt.mean())
-    )
+    print("%s loss: %.2f%%" % (split, rt.mean()))
     return rt.mean()
 
 
@@ -43,13 +39,13 @@ def main(args):
     wandb.init(project="KAN-GPT")
 
     wandb.config = {
-        'model_type': args.model_type,
-        'batch_size': args.batch_size,
-        'dummy_dataset': args.dummy_dataset,
-        'learning_rate': args.learning_rate,
-        'max_iters': args.max_iters,
-        'num_workers': args.num_workers,
-        'architecture': args.architecture,
+        "model_type": args.model_type,
+        "batch_size": args.batch_size,
+        "dummy_dataset": args.dummy_dataset,
+        "learning_rate": args.learning_rate,
+        "max_iters": args.max_iters,
+        "num_workers": args.num_workers,
+        "architecture": args.architecture,
     }
 
     model_type = args.model_type
@@ -78,9 +74,9 @@ def main(args):
 
     # create a Trainer object
     train_config = Trainer.get_default_config()
-    train_config.learning_rate = (
-        float(args.learning_rate)  # the model we're using is so small that we can go a bit faster
-    )
+    train_config.learning_rate = float(
+        args.learning_rate
+    )  # the model we're using is so small that we can go a bit faster
     train_config.max_iters = int(args.max_iters)
     train_config.num_workers = int(args.num_workers)
     train_config.batch_size = int(args.batch_size)
@@ -122,10 +118,12 @@ def main(args):
             print("train_score: ", train_score)
             print("test_score: ", test_score)
 
-            wandb.log({
-                'train_loss': train_score,
-                'test_loss': test_score,
-            })
+            wandb.log(
+                {
+                    "train_loss": train_score,
+                    "test_loss": test_score,
+                }
+            )
 
             print("=" * 20)
 
@@ -144,7 +142,7 @@ if __name__ == "__main__":
     parser.add_argument("--max_iters", default=2000)
     parser.add_argument("--num_workers", default=0)
     parser.add_argument("--batch_size", default=64)
-    
+
     parser.add_argument(
         "--architecture", choices=["MLP", "KAN"], default="KAN"
     )
