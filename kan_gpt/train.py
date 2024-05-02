@@ -11,52 +11,31 @@ set_seed(3407)
 
 
 def eval_split(
-    trainer, split, max_batches, model, train_dataset, test_dataset
+    trainer, split, max_batches, batch_size, model, train_dataset, test_dataset
 ):
     dataset = {"train": train_dataset, "test": test_dataset}[split]
-    n = train_dataset.length  # naugy direct access shrug
+    n = len(train_dataset)  # naugy direct access shrug
     results = []
-    mistakes_printed_already = 0
+
     loader = DataLoader(
-        dataset, batch_size=100, num_workers=0, drop_last=False
+        dataset, batch_size=batch_size, num_workers=0, drop_last=False
     )
     for b, (x, y) in enumerate(loader):
         x = x.to(trainer.device)
         y = y.to(trainer.device)
-        # isolate the input pattern alone
-        inp = x[:, :n]
-        sol = y[:, -n:]
-        # let the model sample the rest of the sequence
-        cat = model.generate(
-            inp, n, do_sample=False
-        )  # using greedy argmax, not sampling
-        sol_candidate = cat[:, n:]  # isolate the filled in sequence
-        # compare the predicted sequence to the true sequence
-        correct = (
-            (sol == sol_candidate).all(1).cpu()
-        )  # Software 1.0 vs. Software 2.0 fight RIGHT on this line haha
-        for i in range(x.size(0)):
-            results.append(int(correct[i]))
-            if (
-                not correct[i] and mistakes_printed_already < 3
-            ):  # only print up to 5 mistakes to get a sense
-                mistakes_printed_already += 1
-                print(
-                    "GPT claims that %s sorted is %s but gt is %s"
-                    % (
-                        inp[i].tolist(),
-                        sol_candidate[i].tolist(),
-                        sol[i].tolist(),
-                    )
-                )
+        
+        logits, loss = model(x, y)
+
+        results.append(loss)
+
         if max_batches is not None and b + 1 >= max_batches:
             break
     rt = torch.tensor(results, dtype=torch.float)
     print(
-        "%s final score: %d/%d = %.2f%% correct"
-        % (split, rt.sum(), len(results), 100 * rt.mean())
+        "%s loss: %.2f%%"
+        % (split, rt.mean())
     )
-    return rt.sum()
+    return rt.mean()
 
 
 def main(args):
@@ -85,10 +64,11 @@ def main(args):
     # create a Trainer object
     train_config = Trainer.get_default_config()
     train_config.learning_rate = (
-        5e-4  # the model we're using is so small that we can go a bit faster
+        float(args.learning_rate)  # the model we're using is so small that we can go a bit faster
     )
-    train_config.max_iters = 2000
-    train_config.num_workers = 0
+    train_config.max_iters = int(args.max_iters)
+    train_config.num_workers = int(args.num_workers)
+    train_config.batch_size = int(args.batch_size)
     trainer = Trainer(train_config, model, train_dataset)
 
     def batch_end_callback(trainer):
@@ -98,37 +78,40 @@ def main(args):
                 f"iter_dt {trainer.iter_dt * 1000:.2f}ms; iter {trainer.iter_num}: train loss {trainer.loss.item():.5f}"
             )
 
+            print("=" * 20)
+            print("EVAL")
+            print("=" * 20)
+
+            model.eval()
+            with torch.no_grad():
+                train_score = eval_split(
+                    trainer,
+                    "train",
+                    max_batches=5,
+                    batch_size=int(args.batch_size),
+                    model=model,
+                    train_dataset=train_dataset,
+                    test_dataset=test_dataset,
+                )
+                test_score = eval_split(
+                    trainer,
+                    "test",
+                    max_batches=5,
+                    batch_size=int(args.batch_size),
+                    model=model,
+                    train_dataset=train_dataset,
+                    test_dataset=test_dataset,
+                )
+
+            model.train()
+            print("train_score: ", train_score)
+            print("test_score: ", test_score)
+
+            print("=" * 20)
+
     trainer.set_callback("on_batch_end", batch_end_callback)
 
     trainer.run()
-
-    print("=" * 20)
-    print("EVAL")
-    print("=" * 20)
-
-    model.eval()
-    with torch.no_grad():
-        train_score = eval_split(
-            trainer,
-            "train",
-            max_batches=50,
-            model=model,
-            train_dataset=train_dataset,
-            test_dataset=test_dataset,
-        )
-        test_score = eval_split(
-            trainer,
-            "test",
-            max_batches=50,
-            model=model,
-            train_dataset=train_dataset,
-            test_dataset=test_dataset,
-        )
-
-    print("train_score: ", train_score)
-    print("test_score: ", test_score)
-
-    print("=" * 20)
 
 
 if __name__ == "__main__":
@@ -137,6 +120,11 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser("KAN-GPT Trainer")
     parser.add_argument("--model_type", default="gpt2")
     parser.add_argument("--dummy_dataset", action="store_true")
+    parser.add_argument("--learning_rate", default=5e-3)
+    parser.add_argument("--max_iters", default=2000)
+    parser.add_argument("--num_workers", default=0)
+    parser.add_argument("--batch_size", default=64)
+    
     parser.add_argument(
         "--architecture", choices=["MLP", "KAN"], default="KAN"
     )

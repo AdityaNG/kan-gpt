@@ -11,6 +11,13 @@ Awesome KAN-GPT created by AdityaNG
 pip install kan_gpt
 ```
 
+## Train
+
+Dummy script to make sure everything is working as expected
+```bash
+CUDA_VISIBLE_DEVICE="0" python3 -m kan_gpt.train --architecture MLP --batch_size 1 --dummy_dataset
+```
+
 ## Usage
 
 ```py
@@ -35,4 +42,4 @@ Read the [CONTRIBUTING.md](CONTRIBUTING.md) file.
 
 - [minGPT](https://github.com/karpathy/minGPT)
 - [pykan](https://github.com/KindXiaoming/pykan)
-
+- [WebText](https://github.com/openai/gpt-2-output-dataset)
