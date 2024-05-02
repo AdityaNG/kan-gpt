@@ -8,3 +8,5 @@ pytest-cov
 mypy
 gitchangelog
 mkdocs
+lark
+types-requests

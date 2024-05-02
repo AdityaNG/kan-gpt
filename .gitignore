@@ -130,3 +130,5 @@ dmypy.json
 
 # templates
 .github/templates/*
+
+datasets/
