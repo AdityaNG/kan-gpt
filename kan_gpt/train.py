@@ -7,6 +7,8 @@ from kan_gpt.mingpt.trainer import Trainer
 from kan_gpt.mingpt.utils import set_seed
 from kan_gpt.model import GPT as KAN_GPT
 
+import wandb
+
 set_seed(3407)
 
 
@@ -14,7 +16,6 @@ def eval_split(
     trainer, split, max_batches, batch_size, model, train_dataset, test_dataset
 ):
     dataset = {"train": train_dataset, "test": test_dataset}[split]
-    n = len(train_dataset)  # naugy direct access shrug
     results = []
 
     loader = DataLoader(
@@ -39,6 +40,18 @@ def eval_split(
 
 
 def main(args):
+    wandb.init(project="KAN-GPT")
+
+    wandb.config = {
+        'model_type': args.model_type,
+        'batch_size': args.batch_size,
+        'dummy_dataset': args.dummy_dataset,
+        'learning_rate': args.learning_rate,
+        'max_iters': args.max_iters,
+        'num_workers': args.num_workers,
+        'architecture': args.architecture,
+    }
+
     model_type = args.model_type
 
     # print an example instance of the dataset
@@ -60,6 +73,8 @@ def main(args):
     model_config.vocab_size = train_dataset.get_vocab_size()
     model_config.block_size = train_dataset.get_block_size()
     model = GPT(model_config)
+
+    wandb.watch(model)
 
     # create a Trainer object
     train_config = Trainer.get_default_config()
@@ -107,6 +122,11 @@ def main(args):
             print("train_score: ", train_score)
             print("test_score: ", test_score)
 
+            wandb.log({
+                'train_loss': train_score,
+                'test_loss': test_score,
+            })
+
             print("=" * 20)
 
     trainer.set_callback("on_batch_end", batch_end_callback)
@@ -130,5 +150,10 @@ if __name__ == "__main__":
     )
 
     args = parser.parse_args()
+
+    args.learning_rate = float(args.learning_rate)
+    args.max_iters = int(args.max_iters)
+    args.num_workers = int(args.num_workers)
+    args.batch_size = int(args.batch_size)
 
     main(args)

@@ -21,17 +21,28 @@ CUDA_VISIBLE_DEVICE="0" python3 -m kan_gpt.train --architecture MLP --batch_size
 ## Usage
 
 ```py
-from kan_gpt import BaseClass
-from kan_gpt import base_function
+from kan_gpt.model import GPT
 
-BaseClass().base_method()
-base_function()
+model_config = GPT.get_default_config()
+model_config.model_type = "gpt2"
+model_config.vocab_size = 5
+model_config.block_size = 10
+model = GPT(model_config)
+
+x = torch.zeros((1, 10), dtype=torch.long)
+y = torch.zeros((1, 10), dtype=torch.long)
+
+# x = x.cuda()
+# y = y.cuda()
+# model = model.cuda()
+
+logits, loss = model(x, y)
+
+print(logits.shape)
 ```
 
 ```bash
-$ python -m kan_gpt
-#or
-$ kan_gpt
+$ python -m kan_gpt.train
 ```
 
 ## Development

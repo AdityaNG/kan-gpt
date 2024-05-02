@@ -418,7 +418,7 @@ class GPT(nn.Module):
 if __name__ == "__main__":
 
     model_config = GPT.get_default_config()
-    model_config.model_type = "gpt-nano"
+    model_config.model_type = "gpt2"
     model_config.vocab_size = 5
     model_config.block_size = 10
     model = GPT(model_config)
