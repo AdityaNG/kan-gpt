@@ -8,9 +8,6 @@ from kan_gpt.mingpt.trainer import Trainer
 from kan_gpt.mingpt.utils import set_seed
 from kan_gpt.model import GPT as KAN_GPT
 
-set_seed(3407)
-
-
 def eval_split(
     trainer, split, max_batches, batch_size, model, train_dataset, test_dataset
 ):
@@ -31,14 +28,12 @@ def eval_split(
         if max_batches is not None and b + 1 >= max_batches:
             break
     rt = torch.tensor(results, dtype=torch.float)
-    print("%s loss: %.2f%%" % (split, rt.mean()))
+    print("%s loss: %.2f" % (split, rt.mean()))
     return rt.mean()
 
 
 def main(args):
-    wandb.init(project="KAN-GPT")
-
-    wandb.config = {
+    config = {
         "model_type": args.model_type,
         "batch_size": args.batch_size,
         "dummy_dataset": args.dummy_dataset,
@@ -47,6 +42,11 @@ def main(args):
         "num_workers": args.num_workers,
         "architecture": args.architecture,
     }
+
+    wandb.init(
+        project="KAN-GPT",
+        config=config
+    )
 
     model_type = args.model_type
 

@@ -214,7 +214,7 @@ class KANLayer(nn.Module):
                 x,
                 torch.ones(
                     self.out_dim,
-                ).to(x.device),
+                ).type_as(x),
             )
             .reshape(batch, self.size)
             .permute(1, 0)
@@ -276,7 +276,7 @@ class KANLayer(nn.Module):
                 x,
                 torch.ones(
                     self.out_dim,
-                ).to(x.device),
+                ).type_as(x),
             )
             .reshape(batch, self.size)
             .permute(1, 0)
@@ -344,7 +344,7 @@ class KANLayer(nn.Module):
                 x,
                 torch.ones(
                     self.out_dim,
-                ).to(x.device),
+                ).type_as(x),
             )
             .reshape(batch, self.size)
             .permute(1, 0)
@@ -356,12 +356,12 @@ class KANLayer(nn.Module):
             k=1,
             num=x_pos.shape[1] - 1,
             scale_base=0.0,
-        ).to(x.device)
+        ).type_as(x)
         sp2.coef.data = curve2coef(sp2.grid, x_pos, sp2.grid, k=1)
         y_eval = coef2curve(
             x_eval, parent.grid, parent.coef, parent.k, device=x.device
         )
-        percentile = torch.linspace(-1, 1, self.num + 1).to(x.device)
+        percentile = torch.linspace(-1, 1, self.num + 1).type_as(x)
         self.grid.data = sp2(percentile.unsqueeze(dim=1))[0].permute(1, 0)
         self.coef.data = curve2coef(
             x_eval, y_eval, self.grid, self.k, x.device
