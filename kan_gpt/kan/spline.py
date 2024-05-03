@@ -47,7 +47,7 @@ def B_batch(x, grid, k=0, extend=True, device="cpu"):
         grid = grid.to(device)
         return grid
 
-    if extend == True:
+    if extend:
         grid = extend_grid(grid, k_extend=k)
 
     grid = grid.unsqueeze(dim=2).to(device)

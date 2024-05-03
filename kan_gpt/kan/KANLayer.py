@@ -2,7 +2,7 @@ import numpy as np
 import torch
 import torch.nn as nn
 
-from .spline import *
+from .spline import coef2curve, curve2coef
 
 
 class KANLayer(nn.Module):
@@ -491,7 +491,7 @@ class KANLayer(nn.Module):
                 self.weight_sharing[ids[i][1] * self.in_dim + ids[i][0]]
                 == self.weight_sharing[ids[0][1] * self.in_dim + ids[0][0]]
             )
-        if locked == False:
+        if not locked:
             print("they are not locked. unlock failed.")
             return 0
         for i in range(len(ids)):

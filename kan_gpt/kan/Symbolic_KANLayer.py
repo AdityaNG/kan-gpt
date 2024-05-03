@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 
-from .utils import *
+from .utils import SYMBOLIC_LIB, fit_params
 
 
 class Symbolic_KANLayer(nn.Module):
@@ -104,7 +104,7 @@ class Symbolic_KANLayer(nn.Module):
         (torch.Size([100, 5]), torch.Size([100, 5, 3]))
         """
 
-        batch = x.shape[0]
+        batch = x.shape[0]  # noqa
         postacts = []
 
         for i in range(self.in_dim):
@@ -230,10 +230,10 @@ class Symbolic_KANLayer(nn.Module):
             fun_sympy = SYMBOLIC_LIB[fun_name][1]
             self.funs_sympy[j][i] = fun_sympy
             self.funs_name[j][i] = fun_name
-            if x == None or y == None:
+            if x is None or y is None:
                 # initialzie from just fun
                 self.funs[j][i] = fun
-                if random == False:
+                if not random:
                     self.affine.data[j][i] = torch.tensor([1.0, 0.0, 1.0, 0.0])
                 else:
                     self.affine.data[j][i] = (
@@ -265,7 +265,7 @@ class Symbolic_KANLayer(nn.Module):
             self.funs_name[j][i] = "anonymous"
 
             self.funs[j][i] = fun
-            if random == False:
+            if not random:
                 self.affine.data[j][i] = torch.tensor([1.0, 0.0, 1.0, 0.0])
             else:
                 self.affine.data[j][i] = (

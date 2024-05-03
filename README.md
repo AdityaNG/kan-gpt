@@ -3,7 +3,7 @@
 [![codecov](https://codecov.io/gh/AdityaNG/kan-gpt/branch/main/graph/badge.svg?token=kan-gpt_token_here)](https://codecov.io/gh/AdityaNG/kan-gpt)
 [![CI](https://github.com/AdityaNG/kan-gpt/actions/workflows/main.yml/badge.svg)](https://github.com/AdityaNG/kan-gpt/actions/workflows/main.yml)
 
-Awesome KAN-GPT created by AdityaNG
+A PyTorch Generative Pre-trained Transformer (GPT) using Kolmogorov-Arnold Networks (KANs) for language modeling
 
 ## Install it from PyPI
 
@@ -22,44 +22,57 @@ model_config.vocab_size = 5
 model_config.block_size = 10
 model = GPT(model_config)
 
+tokenizer = GPT2Tokenizer.from_pretrained('gpt2')
+
 x = torch.zeros((1, 10), dtype=torch.long)
 y = torch.zeros((1, 10), dtype=torch.long)
 
-# x = x.cuda()
-# y = y.cuda()
-# model = model.cuda()
+prompt = "Bangalore is often described as the "
 
-logits, loss = model(x, y)
+prompt_encoded = tokenizer.encode(
+  text=prompt, add_special_tokens=False
+)
 
-print(logits.shape)
+result = prompt
+x = torch.tensor(prompt_encoded).unsqueeze(0)
+
+for _ in range(50):  # sample 50 tokens
+  logits, loss = model(x)
+  x = torch.cat(
+    (x[:, 1:-2], logits[:, -2:-1]), dim=0
+  )
+  result += tokenizer.decode(logits[0, -2:-1])
+
+print(result)
 ```
 
-```bash
-$ python -m kan_gpt.train
-```
-
-## Setup
+## Setup for Development
 
 ```bash
 # Download Repo
-%cd /content
-!git clone https://github.com/AdityaNG/kan-gpt
-%cd kan-gpt
-!git pull
+git clone https://github.com/AdityaNG/kan-gpt
+cd kan-gpt
+git pull
 
 # Download Dataset
-!./scripts/download_webtext.sh
+./scripts/download_webtext.sh
 
 # Install dependencies for development
-!pip install -r requirements.txt
-!pip install -e .
+pip install -r requirements.txt
+pip install -e .
 ```
 
 ## Train
 
-Dummy script to make sure everything is working as expected
+Use the following dummy script to make sure everything is working as expected
 ```bash
-CUDA_VISIBLE_DEVICE="0" python3 -m kan_gpt.train --architecture MLP --batch_size 1 --dummy_dataset
+WANDB_MODE=offline CUDA_VISIBLE_DEVICE="" python3 -m kan_gpt.train --architecture MLP --batch_size 1 --dummy_dataset
+WANDB_MODE=offline CUDA_VISIBLE_DEVICE="" python3 -m kan_gpt.train --architecture KAN --batch_size 1 --dummy_dataset
+```
+
+Then make use of the training script
+```bash
+python -m kan_gpt.train
 ```
 
 ## TODOs

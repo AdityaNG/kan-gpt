@@ -5,8 +5,8 @@ import wandb
 from kan_gpt.dataset import WebTextDataset
 from kan_gpt.mingpt.model import GPT as MLP_GPT
 from kan_gpt.mingpt.trainer import Trainer
-from kan_gpt.mingpt.utils import set_seed
 from kan_gpt.model import GPT as KAN_GPT
+
 
 def eval_split(
     trainer, split, max_batches, batch_size, model, train_dataset, test_dataset
@@ -41,22 +41,20 @@ def main(args):
         "max_iters": args.max_iters,
         "num_workers": args.num_workers,
         "architecture": args.architecture,
+        "device": args.device,
     }
 
-    wandb.init(
-        project="KAN-GPT",
-        config=config
-    )
+    wandb.init(project="KAN-GPT", config=config)
 
     model_type = args.model_type
 
     # print an example instance of the dataset
     if args.dummy_dataset:
-        train_dataset = WebTextDataset("test", model_type)
+        train_dataset = WebTextDataset("test", "gpt2")
     else:
-        train_dataset = WebTextDataset("train", model_type)
+        train_dataset = WebTextDataset("train", "gpt2")
 
-    test_dataset = WebTextDataset("test", model_type)
+    test_dataset = WebTextDataset("test", "gpt2")
 
     if args.architecture == "KAN":
         GPT = KAN_GPT
@@ -80,13 +78,16 @@ def main(args):
     train_config.max_iters = int(args.max_iters)
     train_config.num_workers = int(args.num_workers)
     train_config.batch_size = int(args.batch_size)
+    train_config.device = args.device
     trainer = Trainer(train_config, model, train_dataset)
 
     def batch_end_callback(trainer):
         # TODO: Add W&B Hooks
         if trainer.iter_num % 100 == 0:
             print(
-                f"iter_dt {trainer.iter_dt * 1000:.2f}ms; iter {trainer.iter_num}: train loss {trainer.loss.item():.5f}"
+                f"iter_dt {trainer.iter_dt * 1000:.2f}ms; "
+                f"iter {trainer.iter_num}: "
+                f"train loss {trainer.loss.item():.5f}"
             )
 
             print("=" * 20)
@@ -136,7 +137,7 @@ if __name__ == "__main__":
     import argparse
 
     parser = argparse.ArgumentParser("KAN-GPT Trainer")
-    parser.add_argument("--model_type", default="gpt2")
+    parser.add_argument("--model_type", default="gpt-nano")
     parser.add_argument("--dummy_dataset", action="store_true")
     parser.add_argument("--learning_rate", default=5e-3)
     parser.add_argument("--max_iters", default=2000)
@@ -145,6 +146,9 @@ if __name__ == "__main__":
 
     parser.add_argument(
         "--architecture", choices=["MLP", "KAN"], default="KAN"
+    )
+    parser.add_argument(
+        "--device", choices=["auto", "cpu", "cuda"], default="auto"
     )
 
     args = parser.parse_args()

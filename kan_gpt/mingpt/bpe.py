@@ -144,7 +144,7 @@ class Encoder:
                     j = word.index(first, i)
                     new_word.extend(word[i:j])
                     i = j
-                except:
+                except:  # noqa
                     new_word.extend(word[i:])
                     break
 

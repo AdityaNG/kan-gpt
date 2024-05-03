@@ -32,7 +32,7 @@ fmt:              ## Format code using black & isort.
 
 .PHONY: lint
 lint:             ## Run pep8, black, mypy linters.
-	$(ENV_PREFIX)flake8 kan_gpt/
+	$(ENV_PREFIX)flake8 --per-file-ignores="kan_gpt/*.py:E203 kan_gpt/kan/*.py:E203,E741,E501 kan_gpt/mingpt/*.py:E203,E741,E501,W605" kan_gpt/
 	$(ENV_PREFIX)black -l 79 --check kan_gpt/
 	$(ENV_PREFIX)black -l 79 --check tests/
 	$(ENV_PREFIX)mypy --ignore-missing-imports kan_gpt/

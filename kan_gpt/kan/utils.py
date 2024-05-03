@@ -25,7 +25,7 @@ SYMBOLIC_LIB = {
     "sigmoid": (lambda x: torch.sigmoid(x), sympy.Function("sigmoid")),
     # 'relu': (lambda x: torch.relu(x), relu),
     "sgn": (lambda x: torch.sign(x), lambda x: sympy.sign(x)),
-    "arcsin": (lambda x: torch.arcsin(x), lambda x: sympy.arcsin(x)),
+    "arcsin": (lambda x: torch.arcsin(x), lambda x: sympy.asin(x)),
     "arctan": (lambda x: torch.arctan(x), lambda x: sympy.atan(x)),
     "arctanh": (lambda x: torch.arctanh(x), lambda x: sympy.atanh(x)),
     "0": (lambda x: x * 0, lambda x: x * 0),
@@ -115,13 +115,13 @@ def create_dataset(
     def normalize(data, mean, std):
         return (data - mean) / std
 
-    if normalize_input == True:
+    if normalize_input:
         mean_input = torch.mean(train_input, dim=0, keepdim=True)
         std_input = torch.std(train_input, dim=0, keepdim=True)
         train_input = normalize(train_input, mean_input, std_input)
         test_input = normalize(test_input, mean_input, std_input)
 
-    if normalize_label == True:
+    if normalize_label:
         mean_label = torch.mean(train_label, dim=0, keepdim=True)
         std_label = torch.std(train_label, dim=0, keepdim=True)
         train_label = normalize(train_label, mean_label, std_label)
@@ -230,16 +230,16 @@ def fit_params(
             or b_id == 0
             or b_id == grid_number - 1
         ):
-            if _ == 0 and verbose == True:
+            if _ == 0 and verbose:
                 print("Best value at boundary.")
             if a_id == 0:
-                a_arange = [a_[0], a_[1]]
+                a_arange = [a_[0], a_[1]]  # noqa
             if a_id == grid_number - 1:
-                a_arange = [a_[-2], a_[-1]]
+                a_arange = [a_[-2], a_[-1]]  # noqa
             if b_id == 0:
-                b_arange = [b_[0], b_[1]]
+                b_arange = [b_[0], b_[1]]  # noqa
             if b_id == grid_number - 1:
-                b_arange = [b_[-2], b_[-1]]
+                b_arange = [b_[-2], b_[-1]]  # noqa
 
         else:
             a_range = [a_[a_id - 1], a_[a_id + 1]]
@@ -250,11 +250,12 @@ def fit_params(
     post_fun = fun(a_best * x + b_best)
     r2_best = r2[a_id, b_id]
 
-    if verbose == True:
+    if verbose:
         print(f"r2 is {r2_best}")
         if r2_best < 0.9:
             print(
-                f"r2 is not very high, please double check if you are choosing the correct symbolic function."
+                "r2 is not very high, please double check if you are",
+                "choosing the correct symbolic function.",
             )
 
     post_fun = torch.nan_to_num(post_fun)
