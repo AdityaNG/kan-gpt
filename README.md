@@ -3,7 +3,7 @@
 [![codecov](https://codecov.io/gh/AdityaNG/kan-gpt/branch/main/graph/badge.svg?token=kan-gpt_token_here)](https://codecov.io/gh/AdityaNG/kan-gpt)
 [![CI](https://github.com/AdityaNG/kan-gpt/actions/workflows/main.yml/badge.svg)](https://github.com/AdityaNG/kan-gpt/actions/workflows/main.yml)
 
-A PyTorch Generative Pre-trained Transformer (GPT) using Kolmogorov-Arnold Networks (KANs) for language modeling
+The PyTorch implementation of Generative Pre-trained Transformers (GPTs) using Kolmogorov-Arnold Networks (KANs) for language modeling
 
 ## Install it from PyPI
 
@@ -88,6 +88,10 @@ python -m kan_gpt.train
 - [ ] Auto Save checkpoints to W&B
 - [ ] Script to load checkpoint in interactive mode
 - [ ] Training script to PyTorch Lighting
+- [ ] Test Cases
+  - [ ] KAN: Forward-Backward test
+  - [ ] GPT: Forward-Backward test
+  - [ ] KAN_GPT: Forward-Backward test
 
 ## Development
 
