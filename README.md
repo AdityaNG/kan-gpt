@@ -66,8 +66,8 @@ pip install -e .
 
 Use the following dummy script to make sure everything is working as expected
 ```bash
-WANDB_MODE=offline CUDA_VISIBLE_DEVICE="" python3 -m kan_gpt.train --architecture MLP --batch_size 1 --dummy_dataset
-WANDB_MODE=offline CUDA_VISIBLE_DEVICE="" python3 -m kan_gpt.train --architecture KAN --batch_size 1 --dummy_dataset
+WANDB_MODE=offline CUDA_VISIBLE_DEVICE="" python3 -m kan_gpt.train --architecture MLP --batch_size 1 --dummy_dataset --device cpu
+WANDB_MODE=offline CUDA_VISIBLE_DEVICE="" python3 -m kan_gpt.train --architecture KAN --batch_size 1 --dummy_dataset --device cpu
 ```
 
 Then make use of the training script
@@ -81,7 +81,8 @@ python -m kan_gpt.train
 - [x] Dataset downloading script for [WebText](https://github.com/openai/gpt-2-output-dataset)
 - [x] PyTorch Dataset parser for [WebText](https://github.com/openai/gpt-2-output-dataset)
 - [ ] Mini training POC for KAN-GPT
-  - [ ] Integrate KAN training logic from `KAN.train_kan`
+  - [x] Integrate KAN training logic from `KAN.train_kan`
+  - [ ] Train a dummy batch
 - [x] Mini training POC for MLP-GPT
 - [x] Train MLP-GPT on the webtext dataset as a baseline
 - [ ] Auto Save checkpoints
@@ -89,9 +90,9 @@ python -m kan_gpt.train
 - [ ] Script to load checkpoint in interactive mode
 - [ ] Training script to PyTorch Lighting
 - [ ] Test Cases
-  - [ ] KAN: Forward-Backward test
-  - [ ] GPT: Forward-Backward test
-  - [ ] KAN_GPT: Forward-Backward test
+  - [x] KAN: Forward-Backward test
+  - [x] GPT: Forward-Backward test
+  - [x] KAN_GPT: Forward-Backward test
 
 ## Development
 
