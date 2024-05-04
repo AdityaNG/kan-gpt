@@ -2,7 +2,6 @@ import os
 import torch
 from kan_gpt.mingpt.model import GPT as MLP_GPT
 from kan_gpt.train import save_model
-from kan_gpt.settings import settings
 
 VOCAB_SIZE = 8
 BLOCK_SIZE = 16
