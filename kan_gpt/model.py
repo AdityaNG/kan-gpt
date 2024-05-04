@@ -15,8 +15,15 @@ import torch
 import torch.nn as nn
 from torch.nn import functional as F
 
-from kan_gpt.kan.KAN import KAN
+from kan_gpt.efficient_kan.model import KAN as EFFICIENT_KAN
+from kan_gpt.kan.KAN import KAN as ORIGINAL_KAN
 from kan_gpt.mingpt.utils import CfgNode as CN
+from kan_gpt.settings import settings
+
+if settings.kan.KAN_IMPLEMENTATION == "EFFICIENT_KAN":
+    KAN = EFFICIENT_KAN  # type: ignore
+elif settings.kan.KAN_IMPLEMENTATION == "ORIGINAL_KAN":
+    KAN = ORIGINAL_KAN  # type: ignore
 
 # -----------------------------------------------------------------------------
 
@@ -459,16 +466,17 @@ class GPT(nn.Module):
                 ignore_index=-1,
             )
 
-            reg = self.kan_loss(
-                x=idx,
-                lamb_l1=lamb_l1,
-                lamb_entropy=lamb_entropy,
-                lamb_coef=lamb_coef,
-                lamb_coefdiff=lamb_coefdiff,
-                small_mag_threshold=small_mag_threshold,
-                small_reg_factor=small_reg_factor,
-            )
-            loss = loss + lamb * reg
+            if settings.kan.KAN_IMPLEMENTATION == "ORIGINAL_KAN":
+                reg = self.kan_loss(
+                    x=idx,
+                    lamb_l1=lamb_l1,
+                    lamb_entropy=lamb_entropy,
+                    lamb_coef=lamb_coef,
+                    lamb_coefdiff=lamb_coefdiff,
+                    small_mag_threshold=small_mag_threshold,
+                    small_reg_factor=small_reg_factor,
+                )
+                loss = loss + lamb * reg
 
         return logits, loss
 

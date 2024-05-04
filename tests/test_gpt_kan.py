@@ -32,6 +32,7 @@ def test_forward():
 def test_backward():
     model = get_gpt_model()
     x = torch.zeros((1, BLOCK_SIZE), dtype=torch.long)
+    y_gt = torch.zeros((1, BLOCK_SIZE), dtype=torch.long)
 
     # Make sure grads exist
     requires_grad_set = set()
@@ -40,11 +41,10 @@ def test_backward():
             requires_grad_set.add(param)
     assert len(requires_grad_set) > 0, "requires_grad is not set"
 
-    y, loss = model.forward(x)
+    y, loss = model.forward(x, y_gt)
 
     assert y.shape == (1, BLOCK_SIZE, VOCAB_SIZE), f"Shape mismatch: {y.shape}"
 
-    loss = y.mean()
     loss.backward()
 
     # Make sure grads exist
@@ -72,6 +72,7 @@ def test_forward_batched():
 def test_backward_batched():
     model = get_gpt_model()
     x = torch.zeros((2, BLOCK_SIZE), dtype=torch.long)
+    y_gt = torch.zeros((2, BLOCK_SIZE), dtype=torch.long)
 
     # Make sure grads exist
     requires_grad_set = set()
@@ -80,11 +81,10 @@ def test_backward_batched():
             requires_grad_set.add(param)
     assert len(requires_grad_set) > 0, "requires_grad is not set"
 
-    y, loss = model.forward(x)
+    y, loss = model.forward(x, y_gt)
 
     assert y.shape == (2, BLOCK_SIZE, VOCAB_SIZE), f"Shape mismatch: {y.shape}"
 
-    loss = y.mean()
     loss.backward()
 
     # Make sure grads exist

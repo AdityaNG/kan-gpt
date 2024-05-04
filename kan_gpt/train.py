@@ -137,7 +137,7 @@ if __name__ == "__main__":
     import argparse
 
     parser = argparse.ArgumentParser("KAN-GPT Trainer")
-    parser.add_argument("--model_type", default="gpt-pico")
+    parser.add_argument("--model_type", default="gpt-mini")
     parser.add_argument("--dummy_dataset", action="store_true")
     parser.add_argument("--learning_rate", default=5e-3)
     parser.add_argument("--max_iters", default=2000)
