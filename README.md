@@ -13,20 +13,19 @@ pip install kan_gpt
 
 ## Usage
 
+Refer to the [KAN_GPT.ipynb](KAN_GPT.ipynb) and [kan_gpt/prompt.py](kan_gpt/prompt.py) for usage examples. The following is an ourtine of how to use the model:
+
 ```py
 from kan_gpt.model import GPT
 from transformers import GPT2Tokenizer
 
 model_config = GPT.get_default_config()
 model_config.model_type = "gpt2"
-model_config.vocab_size = 5
-model_config.block_size = 10
+model_config.vocab_size = 50257
+model_config.block_size = 1024
 model = GPT(model_config)
 
 tokenizer = GPT2Tokenizer.from_pretrained('gpt2')
-
-x = torch.zeros((1, 10), dtype=torch.long)
-y = torch.zeros((1, 10), dtype=torch.long)
 
 prompt = "Bangalore is often described as the "
 
@@ -39,7 +38,7 @@ x = torch.tensor(prompt_encoded).unsqueeze(0)
 model.eval()
 y = model.generate(x, 50)  # sample 50 tokens
 
-result = tokenizer.decode(logits[0, -2:-1])
+result = tokenizer.decode(y)
 
 print(result)
 
@@ -88,15 +87,15 @@ python -m kan_gpt.prompt --prompt "Bangalore is often described as the " --model
 - [x] Integrate [minGPT](https://github.com/karpathy/minGPT) and [pykan](https://github.com/KindXiaoming/pykan)
 - [x] Dataset downloading script for [WebText](https://github.com/openai/gpt-2-output-dataset)
 - [x] PyTorch Dataset parser for [WebText](https://github.com/openai/gpt-2-output-dataset)
-- [ ] Mini training POC for KAN-GPT
+- [x] Mini training POC for KAN-GPT
   - [x] Integrate KAN training logic from `KAN.train_kan`
   - [x] Train a dummy batch w/o any memory issues
 - [x] Mini training POC for MLP-GPT
 - [x] Train MLP-GPT on the webtext dataset as a baseline
-- [ ] Auto Save checkpoints
-- [ ] Auto Save checkpoints to W&B
+- [x] Auto Save checkpoints
+- [x] Auto Save checkpoints to W&B
 - [ ] Auto Download model weights from git / huggingface
-- [ ] Script to load checkpoint in interactive mode
+- [x] Script to load checkpoint in interactive mode
 - [ ] Training script to PyTorch Lighting
 - [x] Integrate with [efficient-kan](https://github.com/Blealtan/efficient-kan/blob/master/src/efficient_kan/kan.py)
 - [x] Test Cases
