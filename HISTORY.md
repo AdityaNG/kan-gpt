@@ -4,6 +4,19 @@ Changelog
 
 (unreleased)
 ------------
+- Version increment. [Aditya NG]
+- Docs(KAN_GPT.ipynb): benchmark runs between mlp and kan gpts. [Aditya
+  NG]
+- Feat(train): date id of asset. [Aditya NG]
+- Feat(train,prompt): saving model after training, prompting a model
+  given the saved model path. [Aditya NG]
+- Feat(kan_gpt/dataset.py): lengthwise dataset iteration. [Aditya NG]
+- Fix(dataset): index error. [Aditya NG]
+
+
+0.1.3 (2024-05-04)
+------------------
+- Release: version 0.1.3 🚀 [Aditya NG]
 - Fix(dataset): padding and range fix. [Aditya NG]
 
 
