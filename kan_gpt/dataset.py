@@ -1,6 +1,7 @@
+import json
 import os
-import pickle
 
+import numpy as np
 import pandas as pd
 import torch
 from torch.utils.data import Dataset
@@ -26,9 +27,13 @@ class WebTextDataset(Dataset):
         self.vocab_size = vocab_size
         self.tokenizer = GPT2Tokenizer.from_pretrained(model_type)
 
-        self.pickel_path = f"datasets/webtext/webtext.{split}.pkl"
+        self.compiled_json_path = (
+            f"datasets/webtext/webtext.{split}.compiled.jsonl"
+        )
 
-        if not os.path.isfile(self.pickel_path):
+        encoding = "utf8"
+
+        if not os.path.isfile(self.compiled_json_path):
             self.json_path = f"datasets/webtext/webtext.{split}.jsonl"
 
             assert os.path.isfile(self.json_path)
@@ -54,11 +59,6 @@ class WebTextDataset(Dataset):
             self.data["tokenized"] = tokenized_data
             self.data["tokenized_length"] = tokenized_lengths
 
-            self.dataset = {
-                "x": [],
-                "y": [],
-            }
-
             for _, row in tqdm(
                 self.data.iterrows(),
                 desc="Caching chunks",
@@ -67,25 +67,59 @@ class WebTextDataset(Dataset):
                 tokenized = row["tokenized"]
                 tokenized_length = row["tokenized_length"]
 
-                for index in range(
-                    0, tokenized_length - (self.block_size - 1), 1
-                ):
-                    mid = index + (self.block_size - 1)
-                    x = tokenized[index:mid]
-                    y = tokenized[index + 1 : mid + 1]
+                for index in range(1, tokenized_length - 1, 100):
+                    start_index = 0
+                    mid_index = start_index + index
+                    last_index = tokenized_length
 
-                    self.dataset["x"].append(x)
-                    self.dataset["y"].append(y)
+                    x = np.array(
+                        [
+                            self.vocab_size - 1,
+                        ]
+                        * self.block_size
+                    )
+                    y = np.array(
+                        [
+                            self.vocab_size - 1,
+                        ]
+                        * self.block_size
+                    )
 
-            # Write to pkl
-            with open(self.pickel_path, "wb") as f:
-                pickle.dump(self.dataset, f)
+                    assert len(x) == self.block_size
+                    assert len(y) == self.block_size
 
-        # Read from pkl
-        with open(self.pickel_path, "rb") as f:
-            self.dataset = pickle.load(f)
+                    x[-(mid_index - start_index) :] = tokenized[
+                        start_index:mid_index
+                    ]
+                    y[: (last_index - mid_index)] = tokenized[
+                        mid_index:last_index
+                    ]
 
-        self.dataset = pd.DataFrame(self.dataset)
+                    assert len(x) == self.block_size
+                    assert len(y) == self.block_size
+
+                    x = x.tolist()
+                    y = y.tolist()
+
+                    data = {"x": x, "y": y}
+                    data_json = json.dumps(data) + "\n"
+
+                    data_loaded = json.loads(data_json)
+                    assert (
+                        len(data_loaded["x"]) == self.block_size
+                    ), f"Unexpected len: {len(data_loaded['x'])}"
+                    assert (
+                        len(data_loaded["y"]) == self.block_size
+                    ), f"Unexpected len: {len(data_loaded['y'])}"
+                    with open(
+                        self.compiled_json_path, "a", encoding=encoding
+                    ) as cache_file:
+                        cache_file.write(data_json)
+
+        # Read from cache
+        self.dataset = pd.read_json(
+            path_or_buf=self.compiled_json_path, encoding=encoding, lines=True
+        )
 
     def __len__(self):
         return len(self.dataset)
@@ -100,6 +134,9 @@ class WebTextDataset(Dataset):
 
         x = self.dataset["x"][idx]
         y = self.dataset["y"][idx]
+
+        assert len(x) == self.block_size, f"Unexpected len: {len(x)}"
+        assert len(y) == self.block_size, f"Unexpected len: {len(y)}"
 
         x = torch.tensor(x, dtype=torch.long)
         y = torch.tensor(y, dtype=torch.long)

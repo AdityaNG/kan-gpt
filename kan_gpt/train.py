@@ -44,8 +44,6 @@ def main(args):
         "device": args.device,
     }
 
-    wandb.init(project="KAN-GPT", config=config)
-
     model_type = args.model_type
 
     # print an example instance of the dataset
@@ -55,6 +53,9 @@ def main(args):
         train_dataset = WebTextDataset("train", "gpt2")
 
     test_dataset = WebTextDataset("test", "gpt2")
+
+    print("test_dataset: ", len(test_dataset))
+    print("train_dataset: ", len(train_dataset))
 
     if args.architecture == "KAN":
         GPT = KAN_GPT
@@ -68,8 +69,6 @@ def main(args):
     model_config.block_size = train_dataset.get_block_size()
     model = GPT(model_config)
 
-    wandb.watch(model)
-
     # create a Trainer object
     train_config = Trainer.get_default_config()
     train_config.learning_rate = float(
@@ -80,6 +79,9 @@ def main(args):
     train_config.batch_size = int(args.batch_size)
     train_config.device = args.device
     trainer = Trainer(train_config, model, train_dataset)
+
+    wandb.init(project="KAN-GPT", config=config)
+    wandb.watch(model)
 
     def batch_end_callback(trainer):
         # TODO: Add W&B Hooks
