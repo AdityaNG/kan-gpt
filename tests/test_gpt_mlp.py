@@ -3,7 +3,7 @@ from kan_gpt.mingpt.model import GPT as MLP_GPT
 
 VOCAB_SIZE = 8
 BLOCK_SIZE = 16
-MODEL_TYPE = "gpt-nano"
+MODEL_TYPE = "gpt-pico"
 
 
 def get_gpt_model() -> MLP_GPT:

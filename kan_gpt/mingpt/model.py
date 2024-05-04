@@ -189,6 +189,7 @@ class GPT(nn.Module):
                     "gpt-mini": dict(n_layer=6, n_head=6, n_embd=192),
                     "gpt-micro": dict(n_layer=4, n_head=4, n_embd=128),
                     "gpt-nano": dict(n_layer=3, n_head=3, n_embd=48),
+                    "gpt-pico": dict(n_layer=1, n_head=1, n_embd=1),
                 }[config.model_type]
             )
 

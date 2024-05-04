@@ -33,17 +33,17 @@ prompt_encoded = tokenizer.encode(
   text=prompt, add_special_tokens=False
 )
 
-result = prompt
 x = torch.tensor(prompt_encoded).unsqueeze(0)
 
-for _ in range(50):  # sample 50 tokens
-  logits, loss = model(x)
-  x = torch.cat(
-    (x[:, 1:-2], logits[:, -2:-1]), dim=0
-  )
-  result += tokenizer.decode(logits[0, -2:-1])
+model.eval()
+y = model.generate(x, 50)  # sample 50 tokens
+
+result = tokenizer.decode(logits[0, -2:-1])
 
 print(result)
+
+# Bangalore is often described as the Silicon Valley of India.
+# The city has witnessed rapid growth in the past two decades.....
 ```
 
 ## Setup for Development
@@ -82,14 +82,15 @@ python -m kan_gpt.train
 - [x] PyTorch Dataset parser for [WebText](https://github.com/openai/gpt-2-output-dataset)
 - [ ] Mini training POC for KAN-GPT
   - [x] Integrate KAN training logic from `KAN.train_kan`
-  - [ ] Train a dummy batch
+  - [ ] Train a dummy batch w/o any memory issues
 - [x] Mini training POC for MLP-GPT
 - [x] Train MLP-GPT on the webtext dataset as a baseline
 - [ ] Auto Save checkpoints
 - [ ] Auto Save checkpoints to W&B
 - [ ] Script to load checkpoint in interactive mode
 - [ ] Training script to PyTorch Lighting
-- [ ] Test Cases
+- [ ] Integrate with [efficient-kan](https://github.com/Blealtan/efficient-kan/blob/master/src/efficient_kan/kan.py)
+- [x] Test Cases
   - [x] KAN: Forward-Backward test
   - [x] GPT: Forward-Backward test
   - [x] KAN_GPT: Forward-Backward test
