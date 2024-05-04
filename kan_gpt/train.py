@@ -1,11 +1,17 @@
+import os
+from typing import Union
+
 import torch
 from torch.utils.data.dataloader import DataLoader
+from wandb.sdk.lib import RunDisabled
+from wandb.sdk.wandb_run import Run
 
 import wandb
 from kan_gpt.dataset import WebTextDataset
 from kan_gpt.mingpt.model import GPT as MLP_GPT
 from kan_gpt.mingpt.trainer import Trainer
 from kan_gpt.model import GPT as KAN_GPT
+from kan_gpt.settings import settings
 
 
 def eval_split(
@@ -30,6 +36,20 @@ def eval_split(
     rt = torch.tensor(results, dtype=torch.float)
     print("%s loss: %.2f" % (split, rt.mean()))
     return rt.mean()
+
+
+def save_model(
+    model: torch.nn.Module, run: Union[Run, RunDisabled, None] = None
+):
+    os.makedirs(settings.train.WEIGHTS_PATH, exist_ok=True)
+    save_path = os.path.join(settings.train.WEIGHTS_PATH, "model.pth")
+    torch.save(model.state_dict(), save_path)
+    if run is not None and isinstance(run, Run):
+        artifact = wandb.Artifact("model", type="model")
+        artifact.add_file(save_path)
+        run.log_artifact(artifact)
+    else:
+        print("Model NOT uploaded to wandb")
 
 
 def main(args):
@@ -80,7 +100,7 @@ def main(args):
     train_config.device = args.device
     trainer = Trainer(train_config, model, train_dataset)
 
-    wandb.init(project="KAN-GPT", config=config)
+    run = wandb.init(project="KAN-GPT", config=config)
     wandb.watch(model)
 
     def batch_end_callback(trainer):
@@ -133,6 +153,9 @@ def main(args):
     trainer.set_callback("on_batch_end", batch_end_callback)
 
     trainer.run()
+
+    save_model(model=model, run=run)
+    wandb.finish()
 
 
 if __name__ == "__main__":

@@ -133,3 +133,4 @@ dmypy.json
 
 datasets/
 wandb/
+weights/

@@ -15,6 +15,7 @@ pip install kan_gpt
 
 ```py
 from kan_gpt.model import GPT
+from transformers import GPT2Tokenizer
 
 model_config = GPT.get_default_config()
 model_config.model_type = "gpt2"
@@ -75,6 +76,13 @@ Then make use of the training script
 python -m kan_gpt.train
 ```
 
+## Prompt
+
+You can prompt the model to produce text as follows
+```bash
+python -m kan_gpt.prompt --prompt "Bangalore is often described as the " --model_path (checkpoint)
+```
+
 ## TODOs
 
 - [x] Integrate [minGPT](https://github.com/karpathy/minGPT) and [pykan](https://github.com/KindXiaoming/pykan)
@@ -87,6 +95,7 @@ python -m kan_gpt.train
 - [x] Train MLP-GPT on the webtext dataset as a baseline
 - [ ] Auto Save checkpoints
 - [ ] Auto Save checkpoints to W&B
+- [ ] Auto Download model weights from git / huggingface
 - [ ] Script to load checkpoint in interactive mode
 - [ ] Training script to PyTorch Lighting
 - [x] Integrate with [efficient-kan](https://github.com/Blealtan/efficient-kan/blob/master/src/efficient_kan/kan.py)
