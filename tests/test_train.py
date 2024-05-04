@@ -20,13 +20,8 @@ def get_gpt_model() -> MLP_GPT:
 
 def test_save_model():
     with torch.no_grad():
-        save_path = os.path.join(settings.train.WEIGHTS_PATH, "model.pth")
-
-        if os.path.exists(save_path):
-            os.remove(save_path)
-
         model = get_gpt_model()
-        save_model(model, None)
+        save_path = save_model(model, None)
 
         assert os.path.isfile(save_path), f"Model not saved at {save_path}"
 

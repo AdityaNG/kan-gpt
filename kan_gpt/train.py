@@ -1,4 +1,5 @@
 import os
+from datetime import datetime
 from typing import Union
 
 import torch
@@ -42,14 +43,23 @@ def save_model(
     model: torch.nn.Module, run: Union[Run, RunDisabled, None] = None
 ):
     os.makedirs(settings.train.WEIGHTS_PATH, exist_ok=True)
-    save_path = os.path.join(settings.train.WEIGHTS_PATH, "model.pth")
+    id = datetime.now().strftime("%Y%m%d-%H%M%S")
+    save_path = os.path.join(
+        settings.train.WEIGHTS_PATH,
+        "model_{id}.pth".format(
+            id=id,
+        ),
+    )
     torch.save(model.state_dict(), save_path)
+    print("Model saved: {}".format(save_path))
     if run is not None and isinstance(run, Run):
         artifact = wandb.Artifact("model", type="model")
         artifact.add_file(save_path)
         run.log_artifact(artifact)
     else:
         print("Model NOT uploaded to wandb")
+
+    return save_path
 
 
 def main(args):
