@@ -4,6 +4,14 @@ Changelog
 
 (unreleased)
 ------------
+- Feat(kan_gpt/efficient_kan/): integration with efficient kan reduced
+  training memory footprint. [Aditya NG]
+- Test(gpt-pico): reducing memory footprint. [Aditya NG]
+
+
+0.1.1 (2024-05-04)
+------------------
+- Release: version 0.1.1 🚀 [Aditya NG]
 - Test(kan_gpt,mlp_gpt,kan): test cases for forward-backward passes.
   [Aditya NG]
 - Ci(codecov): token. [Aditya NG]
