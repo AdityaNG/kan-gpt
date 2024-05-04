@@ -4,6 +4,12 @@ Changelog
 
 (unreleased)
 ------------
+- Fix(dataset): padding and range fix. [Aditya NG]
+
+
+0.1.2 (2024-05-04)
+------------------
+- Release: version 0.1.2 🚀 [Aditya NG]
 - Feat(kan_gpt/efficient_kan/): integration with efficient kan reduced
   training memory footprint. [Aditya NG]
 - Test(gpt-pico): reducing memory footprint. [Aditya NG]
