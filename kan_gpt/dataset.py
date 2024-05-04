@@ -67,7 +67,7 @@ class WebTextDataset(Dataset):
                 tokenized = row["tokenized"]
                 tokenized_length = row["tokenized_length"]
 
-                for index in range(1, tokenized_length - 1, 100):
+                for index in range(1, tokenized_length - 1, 1):
                     start_index = 0
                     mid_index = start_index + index
                     last_index = tokenized_length
