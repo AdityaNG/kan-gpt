@@ -20,10 +20,15 @@ from kan_gpt.kan.KAN import KAN as ORIGINAL_KAN
 from kan_gpt.mingpt.utils import CfgNode as CN
 from kan_gpt.settings import settings
 
-if settings.kan.KAN_IMPLEMENTATION == "EFFICIENT_KAN":
-    KAN = EFFICIENT_KAN  # type: ignore
-elif settings.kan.KAN_IMPLEMENTATION == "ORIGINAL_KAN":
-    KAN = ORIGINAL_KAN  # type: ignore
+
+def get_KAN():
+    if settings.kan.KAN_IMPLEMENTATION == "EFFICIENT_KAN":
+        KAN = EFFICIENT_KAN  # type: ignore
+    elif settings.kan.KAN_IMPLEMENTATION == "ORIGINAL_KAN":
+        KAN = ORIGINAL_KAN  # type: ignore
+
+    return KAN
+
 
 # -----------------------------------------------------------------------------
 
@@ -60,6 +65,8 @@ class CausalSelfAttention(nn.Module):
 
     def __init__(self, config):
         super().__init__()
+        KAN = get_KAN()
+
         assert config.n_embd % config.n_head == 0
         # key, query, value projections for all heads, but in a batch
         self.c_attn = KAN(width=[config.n_embd, 3 * config.n_embd])
@@ -118,6 +125,7 @@ class Block(nn.Module):
 
     def __init__(self, config):
         super().__init__()
+        KAN = get_KAN()
         self.ln_1 = nn.LayerNorm(config.n_embd)
         self.attn = CausalSelfAttention(config)
         self.ln_2 = nn.LayerNorm(config.n_embd)
@@ -220,6 +228,7 @@ class GPT(nn.Module):
                 ln_f=nn.LayerNorm(config.n_embd),
             )
         )
+        KAN = get_KAN()
         self.lm_head = KAN(
             width=[config.n_embd, config.vocab_size], bias_trainable=False
         )
@@ -285,6 +294,7 @@ class GPT(nn.Module):
 
         total_reg = torch.tensor(0.0).to(device=x.device, dtype=torch.float32)
         size = 0
+        KAN = get_KAN()
         for mod in self.modules():
             if isinstance(mod, KAN):
                 total_reg += reg(mod)
@@ -294,6 +304,7 @@ class GPT(nn.Module):
         return mean_reg
 
     def _init_weights(self, module):
+        KAN = get_KAN()
         if isinstance(module, KAN):
             # torch.nn.init.normal_(module.weight, mean=0.0, std=0.02)
             # if module.bias is not None:
@@ -369,6 +380,7 @@ class GPT(nn.Module):
         # regularizing weight decay
         decay = set()
         no_decay = set()
+        KAN = get_KAN()
         whitelist_weight_modules = (KAN,)
         blacklist_weight_modules = (torch.nn.LayerNorm, torch.nn.Embedding)
         for mn, m in self.named_modules():

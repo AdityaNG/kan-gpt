@@ -1,23 +1,58 @@
+import os
 import torch
-from kan_gpt.model import GPT as KAN_GPT
+import pytest
+from unittest import mock
 
 VOCAB_SIZE = 8
 BLOCK_SIZE = 16
 MODEL_TYPE = "gpt-pico"
 
 
-def get_gpt_model() -> KAN_GPT:
+@mock.patch.dict(
+    os.environ, {"KAN_IMPLEMENTATION": "EFFICIENT_KAN"}, clear=True
+)
+def get_gpt_model_efficient():
+    from kan_gpt.model import GPT as KAN_GPT
+
     model_config = KAN_GPT.get_default_config()
     model_config.model_type = MODEL_TYPE
     model_config.vocab_size = VOCAB_SIZE
     model_config.block_size = BLOCK_SIZE
     model = KAN_GPT(model_config)
+
+    del KAN_GPT
+
     return model
 
 
-def test_forward():
+@mock.patch.dict(
+    os.environ, {"KAN_IMPLEMENTATION": "ORIGINAL_KAN"}, clear=True
+)
+def get_gpt_model_original():
+    from kan_gpt.model import GPT as KAN_GPT
+
+    model_config = KAN_GPT.get_default_config()
+    model_config.model_type = MODEL_TYPE
+    model_config.vocab_size = VOCAB_SIZE
+    model_config.block_size = BLOCK_SIZE
+    model = KAN_GPT(model_config)
+
+    del KAN_GPT
+
+    return model
+
+
+@pytest.fixture
+def model(request):
+    return request.param()
+
+
+@pytest.mark.parametrize(
+    "model", (get_gpt_model_efficient, get_gpt_model_original), indirect=True
+)
+def test_forward(model):
     with torch.no_grad():
-        model = get_gpt_model()
+
         x = torch.zeros((1, BLOCK_SIZE), dtype=torch.long)
 
         y, loss = model.forward(x)
@@ -29,8 +64,11 @@ def test_forward():
         ), f"Shape mismatch: {y.shape}"
 
 
-def test_backward():
-    model = get_gpt_model()
+@pytest.mark.parametrize(
+    "model", (get_gpt_model_efficient, get_gpt_model_original), indirect=True
+)
+def test_backward(model):
+    model = model
     x = torch.zeros((1, BLOCK_SIZE), dtype=torch.long)
     y_gt = torch.zeros((1, BLOCK_SIZE), dtype=torch.long)
 
@@ -55,9 +93,12 @@ def test_backward():
     assert len(grad_set) > 0, f"Tensor.grad missing"
 
 
-def test_forward_batched():
+@pytest.mark.parametrize(
+    "model", (get_gpt_model_efficient, get_gpt_model_original), indirect=True
+)
+def test_forward_batched(model):
     with torch.no_grad():
-        model = get_gpt_model()
+
         x = torch.zeros((2, BLOCK_SIZE), dtype=torch.long)
 
         y, loss = model.forward(x)
@@ -69,8 +110,11 @@ def test_forward_batched():
         ), f"Shape mismatch: {y.shape}"
 
 
-def test_backward_batched():
-    model = get_gpt_model()
+@pytest.mark.parametrize(
+    "model", (get_gpt_model_efficient, get_gpt_model_original), indirect=True
+)
+def test_backward_batched(model):
+    model = model
     x = torch.zeros((2, BLOCK_SIZE), dtype=torch.long)
     y_gt = torch.zeros((2, BLOCK_SIZE), dtype=torch.long)
 
