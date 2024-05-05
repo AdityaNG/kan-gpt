@@ -92,6 +92,8 @@ python -m kan_gpt.prompt --prompt "Bangalore is often described as the " --model
   - [x] Train a dummy batch w/o any memory issues
 - [x] Mini training POC for MLP-GPT
 - [x] Train MLP-GPT on the webtext dataset as a baseline
+- [x] Train KAN-GPT on the webtext dataset as a baseline
+- [ ] Metrics comparing KAN-GPT and MLP-GPT
 - [x] Auto Save checkpoints
 - [x] Auto Save checkpoints to W&B
 - [ ] Auto Download model weights from git / huggingface

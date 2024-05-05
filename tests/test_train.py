@@ -1,7 +1,7 @@
 import os
 import torch
 from kan_gpt.mingpt.model import GPT as MLP_GPT
-from kan_gpt.train import save_model
+from kan_gpt.train import save_model, main
 
 VOCAB_SIZE = 8
 BLOCK_SIZE = 16
@@ -33,3 +33,21 @@ def test_save_model():
                 f"Model not saved correctly at {save_path}, parameter "
                 f"{name} does not match original model"
             )
+
+
+# def test_train():
+
+#     # TODO: Download mini dataset for testing
+
+#     class Args:
+#         model_type = MODEL_TYPE
+#         dummy_dataset = True
+#         learning_rate = 5e-3
+#         max_iters = 1
+#         num_workers = 0
+#         batch_size = 1
+#         architecture = "KAN"
+#         device = "cpu"
+
+#     args = Args()
+#     main(args)
