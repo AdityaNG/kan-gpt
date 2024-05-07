@@ -66,8 +66,8 @@ pip install -e .
 
 Use the following dummy script to make sure everything is working as expected
 ```bash
-WANDB_MODE=offline CUDA_VISIBLE_DEVICE="" python3 -m kan_gpt.train --architecture MLP --batch_size 1 --dummy_dataset --device cpu
-WANDB_MODE=offline CUDA_VISIBLE_DEVICE="" python3 -m kan_gpt.train --architecture KAN --batch_size 1 --dummy_dataset --device cpu
+WANDB_MODE=offline CUDA_VISIBLE_DEVICE="" python3 -m kan_gpt.train --architecture MLP --batch_size 1 --dummy_dataset --device cpu --max_iters 200
+WANDB_MODE=offline CUDA_VISIBLE_DEVICE="" python3 -m kan_gpt.train --architecture KAN --batch_size 1 --dummy_dataset --device cpu --max_iters 200
 ```
 
 Then make use of the training script
@@ -97,6 +97,7 @@ python -m kan_gpt.prompt --prompt "Bangalore is often described as the " --model
 - [x] Auto Save checkpoints
 - [x] Auto Save checkpoints to W&B
 - [ ] Auto Download model weights from git / huggingface
+- [ ] W&B hyperparam sweep script
 - [x] Script to load checkpoint in interactive mode
 - [ ] Training script to PyTorch Lighting
 - [x] Integrate with [efficient-kan](https://github.com/Blealtan/efficient-kan/blob/master/src/efficient_kan/kan.py)

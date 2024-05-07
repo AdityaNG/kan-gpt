@@ -8,7 +8,7 @@ from wandb.sdk.lib import RunDisabled
 from wandb.sdk.wandb_run import Run
 
 import wandb
-from kan_gpt.dataset import WebTextDataset
+from kan_gpt.dataset import TinyShakespeareDataset, WebTextDataset
 from kan_gpt.mingpt.model import GPT as MLP_GPT
 from kan_gpt.mingpt.trainer import Trainer
 from kan_gpt.model import GPT as KAN_GPT
@@ -70,19 +70,25 @@ def main(args):
         "learning_rate": args.learning_rate,
         "max_iters": args.max_iters,
         "num_workers": args.num_workers,
+        "dataset": args.dataset,
         "architecture": args.architecture,
         "device": args.device,
     }
 
     model_type = args.model_type
 
+    if args.dataset == "webtext":
+        Dataset = WebTextDataset
+    elif args.dataset == "tinyshakespeare":
+        Dataset = TinyShakespeareDataset
+
     # print an example instance of the dataset
     if args.dummy_dataset:
-        train_dataset = WebTextDataset("test", "gpt2")
+        train_dataset = Dataset("test", "gpt2")
     else:
-        train_dataset = WebTextDataset("train", "gpt2")
+        train_dataset = Dataset("train", "gpt2")
 
-    test_dataset = WebTextDataset("test", "gpt2")
+    test_dataset = Dataset("test", "gpt2")
 
     print("test_dataset: ", len(test_dataset))
     print("train_dataset: ", len(train_dataset))
@@ -179,6 +185,11 @@ if __name__ == "__main__":
     parser.add_argument("--num_workers", default=0)
     parser.add_argument("--batch_size", default=64)
 
+    parser.add_argument(
+        "--dataset",
+        choices=["webtext", "tinyshakespeare"],
+        default="tinyshakespeare",
+    )
     parser.add_argument(
         "--architecture", choices=["MLP", "KAN"], default="KAN"
     )
