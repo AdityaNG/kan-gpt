@@ -62,7 +62,7 @@ def save_model(
     return save_path
 
 
-def main(args):
+def main(args, run=None):
     config = {
         "model_type": args.model_type,
         "batch_size": args.batch_size,
@@ -116,7 +116,8 @@ def main(args):
     train_config.device = args.device
     trainer = Trainer(train_config, model, train_dataset)
 
-    run = wandb.init(project="KAN-GPT", config=config)
+    if run is None:
+        run = wandb.init(project="KAN-GPT", config=config)
     wandb.watch(model)
 
     def batch_end_callback(trainer):
