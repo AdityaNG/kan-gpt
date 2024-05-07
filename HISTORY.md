@@ -4,6 +4,17 @@ Changelog
 
 (unreleased)
 ------------
+- Docs(README.md): dataset mention. [Aditya NG]
+- Feat(sweep): sweep script for getting a vast hyperparam sweep. [Aditya
+  NG]
+- Feat(tinyshakespeare): support for another dataset. [Aditya NG]
+- Test(tests/test_prompt.py): eval code. [Aditya NG]
+- Test(efficient_kan,original_kan): coverage. [Aditya NG]
+
+
+0.2.0 (2024-05-04)
+------------------
+- Release: version 0.2.0 🚀 [Aditya NG]
 - Version increment. [Aditya NG]
 - Docs(KAN_GPT.ipynb): benchmark runs between mlp and kan gpts. [Aditya
   NG]
