@@ -87,6 +87,7 @@ python -m kan_gpt.prompt --prompt "Bangalore is often described as the " --model
 - [x] Integrate [minGPT](https://github.com/karpathy/minGPT) and [pykan](https://github.com/KindXiaoming/pykan)
 - [x] Dataset downloading script for [WebText](https://github.com/openai/gpt-2-output-dataset)
 - [x] PyTorch Dataset parser for [WebText](https://github.com/openai/gpt-2-output-dataset)
+- [x] PyTorch Dataset parser for [tinyshakespeare](https://raw.githubusercontent.com/karpathy/char-rnn/master/data/tinyshakespeare/input.txt)
 - [x] Mini training POC for KAN-GPT
   - [x] Integrate KAN training logic from `KAN.train_kan`
   - [x] Train a dummy batch w/o any memory issues
@@ -97,7 +98,7 @@ python -m kan_gpt.prompt --prompt "Bangalore is often described as the " --model
 - [x] Auto Save checkpoints
 - [x] Auto Save checkpoints to W&B
 - [ ] Auto Download model weights from git / huggingface
-- [ ] W&B hyperparam sweep script
+- [x] W&B hyperparam sweep script
 - [x] Script to load checkpoint in interactive mode
 - [ ] Training script to PyTorch Lighting
 - [x] Integrate with [efficient-kan](https://github.com/Blealtan/efficient-kan/blob/master/src/efficient_kan/kan.py)
@@ -115,4 +116,5 @@ Read the [CONTRIBUTING.md](CONTRIBUTING.md) file.
 
 - [minGPT](https://github.com/karpathy/minGPT)
 - [pykan](https://github.com/KindXiaoming/pykan)
-- [WebText](https://github.com/openai/gpt-2-output-dataset)
+- [webtext](https://github.com/openai/gpt-2-output-dataset)
+- [tinyshakespeare](https://raw.githubusercontent.com/karpathy/char-rnn/master/data/tinyshakespeare/input.txt)
