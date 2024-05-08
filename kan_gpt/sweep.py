@@ -60,9 +60,9 @@ if __name__ == "__main__":
         dummy_dataset = [
             False,
         ]
-        learning_rate = [5e-3, 5e-4, 5e-5, 5e-6]
+        learning_rate = [5e-5, 5e-6, 5e-7]
         max_iters = [
-            4000,
+            8000,
         ]
         num_workers = [
             0,
