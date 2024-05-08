@@ -56,7 +56,7 @@ def sweep(args):
 if __name__ == "__main__":
 
     class SweepArgs:
-        model_type = ["gpt-mini", "gpt-nano", "gpt2"]
+        model_type = ["gpt-mini", "gpt-micro", "gpt-nano", "gpt-pico"]
         dummy_dataset = [
             False,
         ]
@@ -67,7 +67,7 @@ if __name__ == "__main__":
         num_workers = [
             0,
         ]
-        batch_size = [1, 2, 4, 8]
+        batch_size = [1, 2, 3, 4]
         dataset = [
             "tinyshakespeare",
         ]

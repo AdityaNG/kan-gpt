@@ -103,6 +103,7 @@ python -m kan_gpt.prompt --prompt "Bangalore is often described as the " --model
 - [ ] Auto Download model weights from git / huggingface
 - [x] W&B hyperparam sweep script
 - [x] Script to load checkpoint in interactive mode
+- [ ] Reduce requrements.txt constraints
 - [ ] Define pydantic model for training and sweep args
 - [ ] Pruning the package, get rid of unused code
 - [ ] Training script to PyTorch Lighting
