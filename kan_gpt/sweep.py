@@ -6,7 +6,6 @@ from kan_gpt.train import main
 
 def wandb_sweep():
     run = wandb.init(resume="allow", anonymous="must")
-    torch.cuda.empty_cache()
 
     class Args:
         model_type = wandb.config.model_type
@@ -20,6 +19,9 @@ def wandb_sweep():
         device = wandb.config.device
 
     run_args = Args()
+
+    if "cuda" in run_args.device:
+        torch.cuda.empty_cache()
 
     main(args=run_args, run=run)
 
