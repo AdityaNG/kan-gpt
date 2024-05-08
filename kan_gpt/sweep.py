@@ -65,7 +65,7 @@ if __name__ == "__main__":
         num_workers = [
             0,
         ]
-        batch_size = [1, 2, 4, 8, 12, 16]
+        batch_size = [1, 2, 4, 8]
         dataset = [
             "tinyshakespeare",
         ]
