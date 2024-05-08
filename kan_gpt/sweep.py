@@ -62,7 +62,7 @@ if __name__ == "__main__":
         ]
         learning_rate = [5e-3, 5e-4, 5e-5, 5e-6]
         max_iters = [
-            1000,
+            4000,
         ]
         num_workers = [
             0,
