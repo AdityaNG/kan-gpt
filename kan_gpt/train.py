@@ -2,7 +2,9 @@ import os
 from datetime import datetime
 from typing import Union
 
+import numpy as np
 import torch
+from torch.nn import functional as F
 from torch.utils.data.dataloader import DataLoader
 from wandb.sdk.lib import RunDisabled
 from wandb.sdk.wandb_run import Run
@@ -13,6 +15,59 @@ from kan_gpt.mingpt.model import GPT as MLP_GPT
 from kan_gpt.mingpt.trainer import Trainer
 from kan_gpt.model import GPT as KAN_GPT
 from kan_gpt.settings import settings
+
+
+def metrics(y, y_pred):
+    """
+    y: (B, T) INT - True labels
+    y_pred: (B, T, C) FLOAT - Predicted probabilities
+
+    Returns:
+    - Perplexity
+    - F1 Score
+    - Precision
+    - Recall
+    - Cross Entropy
+    """
+
+    # Make sure y_pred is between 0 and 1
+    if not (np.all(y_pred >= 0) and np.all(y_pred <= 1)):
+        # Softmax
+        y_pred = np.exp(y_pred) / np.sum(
+            np.exp(y_pred), axis=-1, keepdims=True
+        )
+
+    assert np.all(y_pred >= 0) and np.all(
+        y_pred <= 1
+    ), "y_pred must be between 0 and 1"
+
+    # Add a small epsilon for numerical stability
+    epsilon = 1e-9
+    y_pred = np.clip(y_pred, epsilon, 1 - epsilon)
+
+    # Cross Entropy
+    y_one_hot = np.eye(y_pred.shape[-1])[y]
+    cross_entropy = -np.mean(np.sum(y_one_hot * np.log(y_pred), axis=-1))
+
+    # Perplexity
+    perplexity = 2**cross_entropy
+
+    # Predicted classes
+    y_pred_class = np.argmax(y_pred, axis=-1)
+
+    # True Positives, False Positives, and False Negatives
+    TP = np.sum(y == y_pred_class)
+    FP = np.sum(y != y_pred_class)
+    FN = FP  # Binary setup, false positives and false negatives are equivalent
+
+    # Precision, Recall
+    precision = TP / (TP + FP)
+    recall = TP / (TP + FN)
+
+    # F1 Score
+    f1 = 2 * (precision * recall) / (precision + recall)
+
+    return perplexity, f1, precision, recall, cross_entropy
 
 
 def eval_split(
@@ -28,15 +83,27 @@ def eval_split(
         x = x.to(trainer.device)
         y = y.to(trainer.device)
 
+        block_size = y.shape[1]
+
         logits, loss = model(x, y)
 
-        results.append(loss)
+        probs = F.softmax(logits, dim=-1)
+
+        _, y_pred = torch.topk(probs, k=block_size, dim=-1)
+
+        perplexity, f1, precision, recall, cross_entropy = metrics(
+            y=y.cpu().numpy(), y_pred=probs.cpu().numpy()
+        )
+
+        results.append(
+            (loss, perplexity, f1, precision, recall, cross_entropy)
+        )
 
         if max_batches is not None and b + 1 >= max_batches:
             break
     rt = torch.tensor(results, dtype=torch.float)
-    print("%s loss: %.2f" % (split, rt.mean()))
-    return rt.mean()
+    print("%s loss: %.2f" % (split, rt.mean(dim=0)[0]))
+    return rt.mean(dim=0)
 
 
 def save_model(
@@ -154,14 +221,52 @@ def main(args, run=None):
                     test_dataset=test_dataset,
                 )
 
+                (
+                    train_loss,
+                    train_perplexity,
+                    train_f1,
+                    train_precision,
+                    train_recall,
+                    train_cross_entropy,
+                ) = train_score
+                (
+                    test_loss,
+                    test_perplexity,
+                    test_f1,
+                    test_precision,
+                    test_recall,
+                    test_cross_entropy,
+                ) = test_score
+
             model.train()
-            print("train_score: ", train_score)
-            print("test_score: ", test_score)
+            print("train_loss: ", train_loss)
+            print("train_perplexity: ", train_perplexity)
+            print("train_f1: ", train_f1)
+            print("train_precision: ", train_precision)
+            print("train_recall: ", train_recall)
+            print("train_cross_entropy: ", train_cross_entropy)
+
+            print("test_loss: ", test_loss)
+            print("test_perplexity: ", test_perplexity)
+            print("test_f1: ", test_f1)
+            print("test_precision: ", test_precision)
+            print("test_recall: ", test_recall)
+            print("test_cross_entropy: ", test_cross_entropy)
 
             wandb.log(
                 {
-                    "train_loss": train_score,
-                    "test_loss": test_score,
+                    "train_loss": train_loss,
+                    "train_perplexity": train_perplexity,
+                    "train_f1": train_f1,
+                    "train_precision": train_precision,
+                    "train_recall": train_recall,
+                    "train_cross_entropy": train_cross_entropy,
+                    "test_loss": test_loss,
+                    "test_perplexity": test_perplexity,
+                    "test_f1": test_f1,
+                    "test_precision": test_precision,
+                    "test_recall": test_recall,
+                    "test_cross_entropy": test_cross_entropy,
                 }
             )
 
