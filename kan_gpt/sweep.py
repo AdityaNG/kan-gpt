@@ -73,7 +73,7 @@ if __name__ == "__main__":
         ]
         architecture = ["MLP", "KAN"]
         device = [
-            "auto",
+            "cuda",
         ]
 
     sweep(SweepArgs())
