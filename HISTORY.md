@@ -2,8 +2,9 @@ Changelog
 =========
 
 
-(unreleased)
-------------
+0.4.0 (2024-05-08)
+------------------
+- Release: version 0.4.0 🚀 [Aditya NG]
 - Version increment. [Aditya NG]
 - Fix(kan_gpt/efficient_kan/__init__.py): missing init file. [Aditya NG]
 - Feat(README.md): results added. [Aditya NG]
