@@ -1,7 +1,9 @@
 import os
 import torch
+
 from kan_gpt.mingpt.model import GPT as MLP_GPT
 from kan_gpt.train import save_model, main
+from kan_gpt.download_dataset import download_tinyshakespeare
 
 VOCAB_SIZE = 8
 BLOCK_SIZE = 16
@@ -35,19 +37,19 @@ def test_save_model():
             )
 
 
-# def test_train():
+def test_train():
+    download_tinyshakespeare()
 
-#     # TODO: Download mini dataset for testing
+    class Args:
+        model_type = MODEL_TYPE
+        dummy_dataset = True
+        learning_rate = 5e-3
+        max_iters = 1
+        num_workers = 0
+        batch_size = 1
+        dataset = "tinyshakespeare"
+        architecture = "MLP"
+        device = "cpu"
 
-#     class Args:
-#         model_type = MODEL_TYPE
-#         dummy_dataset = True
-#         learning_rate = 5e-3
-#         max_iters = 1
-#         num_workers = 0
-#         batch_size = 1
-#         architecture = "KAN"
-#         device = "cpu"
-
-#     args = Args()
-#     main(args)
+    args = Args()
+    main(args)

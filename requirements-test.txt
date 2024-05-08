@@ -10,3 +10,4 @@ gitchangelog
 mkdocs
 lark
 types-requests
+requests-mock

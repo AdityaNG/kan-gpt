@@ -2,6 +2,8 @@
 
 [![codecov](https://codecov.io/gh/AdityaNG/kan-gpt/branch/main/graph/badge.svg?token=kan-gpt_token_here)](https://codecov.io/gh/AdityaNG/kan-gpt)
 [![CI](https://github.com/AdityaNG/kan-gpt/actions/workflows/main.yml/badge.svg)](https://github.com/AdityaNG/kan-gpt/actions/workflows/main.yml)
+![PyPI - Version](https://img.shields.io/pypi/v/kan-gpt)
+![GitHub License](https://img.shields.io/github/license/AdityaNG/kan-gpt)
 
 The PyTorch implementation of Generative Pre-trained Transformers (GPTs) using Kolmogorov-Arnold Networks (KANs) for language modeling
 
@@ -56,6 +58,7 @@ git pull
 
 # Download Dataset
 ./scripts/download_webtext.sh
+./scripts/download_tinyshakespeare.sh
 
 # Install dependencies for development
 pip install -r requirements.txt
@@ -100,6 +103,8 @@ python -m kan_gpt.prompt --prompt "Bangalore is often described as the " --model
 - [ ] Auto Download model weights from git / huggingface
 - [x] W&B hyperparam sweep script
 - [x] Script to load checkpoint in interactive mode
+- [ ] Define pydantic model for training and sweep args
+- [ ] Pruning the package, get rid of unused code
 - [ ] Training script to PyTorch Lighting
 - [x] Integrate with [efficient-kan](https://github.com/Blealtan/efficient-kan/blob/master/src/efficient_kan/kan.py)
 - [x] Test Cases
