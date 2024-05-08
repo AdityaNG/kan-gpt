@@ -51,5 +51,7 @@ def test_train():
         architecture = "MLP"
         device = "cpu"
 
+    os.environ["WANDB_DISABLED"] = "true"
+
     args = Args()
     main(args)
