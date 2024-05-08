@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="description" content="None" />
+      <link rel="shortcut icon" href="img/favicon.ico" />
+    <title>kan_gpt</title>
+    <link rel="stylesheet" href="css/theme.css" />
+    <link rel="stylesheet" href="css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "KAN-GPT";
+        var mkdocs_page_input_path = "index.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="." class="icon icon-home"> kan_gpt
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="./search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+                <li class="toctree-l1 current"><a class="reference internal current" href="#">KAN-GPT</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#install-it-from-pypi">Install it from PyPI</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#usage">Usage</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#setup-for-development">Setup for Development</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#train">Train</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#prompt">Prompt</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#references">References</a>
+    </li>
+    </ul>
+                </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href=".">kan_gpt</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">KAN-GPT</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="kan-gpt">KAN-GPT</h1>
+<p><a href="https://codecov.io/gh/AdityaNG/kan-gpt"><img alt="codecov" src="https://codecov.io/gh/AdityaNG/kan-gpt/branch/main/graph/badge.svg?token=kan-gpt_token_here" /></a>
+<a href="https://github.com/AdityaNG/kan-gpt/actions/workflows/main.yml"><img alt="CI" src="https://github.com/AdityaNG/kan-gpt/actions/workflows/main.yml/badge.svg" /></a>
+<img alt="PyPI - Version" src="https://img.shields.io/pypi/v/kan-gpt" />
+<img alt="GitHub License" src="https://img.shields.io/github/license/AdityaNG/kan-gpt" /></p>
+<p>The PyTorch implementation of Generative Pre-trained Transformers (GPTs) using Kolmogorov-Arnold Networks (KANs) for language modeling</p>
+<h2 id="install-it-from-pypi">Install it from PyPI</h2>
+<pre><code class="language-bash">pip install kan_gpt
+</code></pre>
+<h2 id="usage">Usage</h2>
+<p>Refer to the <a href="https://github.com/AdityaNG/kan-gpt/blob/main/KAN_GPT.ipynb">KAN_GPT.ipynb</a> and <a href="https://github.com/AdityaNG/kan-gpt/blob/main/kan_gpt/prompt.py">kan_gpt/prompt.py</a> for usage examples. The following is an ourtine of how to use the model:</p>
+<pre><code class="language-py">from kan_gpt.model import GPT
+from transformers import GPT2Tokenizer
+
+model_config = GPT.get_default_config()
+model_config.model_type = &quot;gpt2&quot;
+model_config.vocab_size = 50257
+model_config.block_size = 1024
+model = GPT(model_config)
+
+tokenizer = GPT2Tokenizer.from_pretrained('gpt2')
+
+prompt = &quot;Bangalore is often described as the &quot;
+
+prompt_encoded = tokenizer.encode(
+  text=prompt, add_special_tokens=False
+)
+
+x = torch.tensor(prompt_encoded).unsqueeze(0)
+
+model.eval()
+y = model.generate(x, 50)  # sample 50 tokens
+
+result = tokenizer.decode(y)
+
+print(result)
+
+# Bangalore is often described as the Silicon Valley of India.
+# The city has witnessed rapid growth in the past two decades.....
+</code></pre>
+<h2 id="setup-for-development">Setup for Development</h2>
+<pre><code class="language-bash"># Download Repo
+git clone https://github.com/AdityaNG/kan-gpt
+cd kan-gpt
+git pull
+
+# Download Dataset
+./scripts/download_webtext.sh
+./scripts/download_tinyshakespeare.sh
+
+# Install dependencies for development
+pip install -r requirements.txt
+pip install -e .
+</code></pre>
+<h2 id="train">Train</h2>
+<p>Use the following dummy script to make sure everything is working as expected</p>
+<pre><code class="language-bash">WANDB_MODE=offline CUDA_VISIBLE_DEVICE=&quot;&quot; python3 -m kan_gpt.train --architecture MLP --batch_size 1 --dummy_dataset --device cpu --max_iters 200
+WANDB_MODE=offline CUDA_VISIBLE_DEVICE=&quot;&quot; python3 -m kan_gpt.train --architecture KAN --batch_size 1 --dummy_dataset --device cpu --max_iters 200
+</code></pre>
+<p>Then make use of the training script</p>
+<pre><code class="language-bash">python -m kan_gpt.train
+</code></pre>
+<h2 id="prompt">Prompt</h2>
+<p>You can prompt the model to produce text as follows</p>
+<pre><code class="language-bash">python -m kan_gpt.prompt --prompt &quot;Bangalore is often described as the &quot; --model_path (checkpoint)
+</code></pre>
+<h2 id="references">References</h2>
+<ul>
+<li><a href="https://github.com/karpathy/minGPT">minGPT</a></li>
+<li><a href="https://github.com/KindXiaoming/pykan">pykan</a></li>
+<li><a href="https://github.com/openai/gpt-2-output-dataset">webtext</a></li>
+<li><a href="https://raw.githubusercontent.com/karpathy/char-rnn/master/data/tinyshakespeare/input.txt">tinyshakespeare</a></li>
+</ul>
+              
+            </div>
+          </div><footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+    
+  </span>
+</div>
+    <script src="js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = ".";</script>
+    <script src="js/theme_extra.js"></script>
+    <script src="js/theme.js"></script>
+      <script src="search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>
+
+<!--
+MkDocs version : 1.6.0
+Build Date UTC : 2024-05-08 06:39:00.153642+00:00
+-->
