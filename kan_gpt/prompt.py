@@ -52,12 +52,12 @@ if __name__ == "__main__":
     import argparse
 
     parser = argparse.ArgumentParser("KAN-GPT Trainer")
-    parser.add_argument("--model_type", default="gpt-mini")
+    parser.add_argument("--model_type", default="gpt-micro")
     parser.add_argument("--model_path", default=None)
     parser.add_argument("--max_tokens", default=100)
 
     parser.add_argument(
-        "--prompt", default="Bangalore is often described as the "
+        "--prompt", default="Out of thy sleep. What is it thou didst say?"
     )
     parser.add_argument(
         "--architecture", choices=["MLP", "KAN"], default="KAN"

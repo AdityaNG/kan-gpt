@@ -85,6 +85,12 @@ You can prompt the model to produce text as follows
 python -m kan_gpt.prompt --prompt "Bangalore is often described as the " --model_path (checkpoint)
 ```
 
+## Results
+
+We train and compare KAN-GPT with an equivalent MLP-GPT model on the Tiny Shakespeare dataset. We observe that the KAN-GPT performs slightly better than the MLP-GPT. We are looking into further experiments to dive deeper. The results are shown below:
+
+<img src="media/results.png">
+
 ## TODOs
 
 - [x] Integrate [minGPT](https://github.com/karpathy/minGPT) and [pykan](https://github.com/KindXiaoming/pykan)
@@ -107,6 +113,7 @@ python -m kan_gpt.prompt --prompt "Bangalore is often described as the " --model
 - [ ] Define pydantic model for training and sweep args
 - [ ] Pruning the package, get rid of unused code
 - [ ] Training script to PyTorch Lighting
+- [x] Documentation: `mkdocs gh-deploy`
 - [x] Integrate with [efficient-kan](https://github.com/Blealtan/efficient-kan/blob/master/src/efficient_kan/kan.py)
 - [x] Test Cases
   - [x] KAN: Forward-Backward test
