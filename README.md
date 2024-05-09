@@ -108,7 +108,7 @@ We train and compare KAN-GPT with an equivalent MLP-GPT model on the Tiny Shakes
 - [x] Mini training POC for MLP-GPT
 - [x] Train MLP-GPT on the webtext dataset as a baseline
 - [x] Train KAN-GPT on the webtext dataset as a baseline
-- [ ] Metrics comparing KAN-GPT and MLP-GPT
+- [x] Metrics comparing KAN-GPT and MLP-GPT
 - [x] Auto Save checkpoints
 - [x] Auto Save checkpoints to W&B
 - [ ] Auto Download model weights from git / huggingface

@@ -357,7 +357,14 @@ class KAN(nn.Module):
         torch.Size([100, 3])
         """
 
-        B, C, T = x.shape
+        shape_size = len(x.shape)
+
+        if shape_size == 3:
+            B, C, T = x.shape
+        elif shape_size == 2:
+            B, T = x.shape
+        else:
+            raise NotImplementedError()
 
         x = x.view(-1, T)
 
@@ -403,7 +410,10 @@ class KAN(nn.Module):
 
         U = x.shape[1]
 
-        x = x.view(B, C, U)
+        if shape_size == 3:
+            x = x.view(B, C, U)
+        elif shape_size == 2:
+            assert x.shape == (B, U)
 
         return x
 

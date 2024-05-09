@@ -18,6 +18,7 @@ def get_gpt_model_efficient():
     model_config.model_type = MODEL_TYPE
     model_config.vocab_size = VOCAB_SIZE
     model_config.block_size = BLOCK_SIZE
+    model_config.kan_implementation = os.getenv("KAN_IMPLEMENTATION")
     model = KAN_GPT(model_config)
 
     del KAN_GPT
@@ -35,6 +36,7 @@ def get_gpt_model_original():
     model_config.model_type = MODEL_TYPE
     model_config.vocab_size = VOCAB_SIZE
     model_config.block_size = BLOCK_SIZE
+    model_config.kan_implementation = os.getenv("KAN_IMPLEMENTATION")
     model = KAN_GPT(model_config)
 
     del KAN_GPT

@@ -1,5 +1,9 @@
+import random
+from tempfile import TemporaryDirectory
+
 import torch
 from kan_gpt.mingpt.model import GPT as MLP_GPT
+from kan_gpt.mingpt.utils import set_seed, setup_logging, CfgNode as CN
 
 VOCAB_SIZE = 8
 BLOCK_SIZE = 16
@@ -93,3 +97,32 @@ def test_backward_batched():
         if isinstance(param.grad, torch.Tensor):
             grad_set.add(param)
     assert len(grad_set) > 0, f"Tensor.grad missing"
+
+
+def test_CN():
+    C = CN()
+    C.device = "auto"
+    assert C.device == "auto", "Unable to set param"
+
+
+def test_seed_set():
+    seed = 0
+    set_seed(seed)
+
+    rr1 = random.random()
+    rr2 = random.random()
+
+    set_seed(seed)
+
+    rr3 = random.random()
+
+    assert rr1 == rr3, "seed not set correctly"
+    assert rr1 != rr2, "seed not set correctly"
+
+
+def test_setup_logging():
+    C = CN()
+    with TemporaryDirectory() as folder:
+        C.system = CN()
+        C.system.work_dir = folder
+        setup_logging(C)

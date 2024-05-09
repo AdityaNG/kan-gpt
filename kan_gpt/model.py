@@ -20,16 +20,6 @@ from kan_gpt.kan.KAN import KAN as ORIGINAL_KAN
 from kan_gpt.mingpt.utils import CfgNode as CN
 from kan_gpt.settings import settings
 
-
-def get_KAN():
-    if settings.kan.KAN_IMPLEMENTATION == "EFFICIENT_KAN":
-        KAN = EFFICIENT_KAN  # type: ignore
-    elif settings.kan.KAN_IMPLEMENTATION == "ORIGINAL_KAN":
-        KAN = ORIGINAL_KAN  # type: ignore
-
-    return KAN
-
-
 # -----------------------------------------------------------------------------
 
 
@@ -65,7 +55,8 @@ class CausalSelfAttention(nn.Module):
 
     def __init__(self, config):
         super().__init__()
-        KAN = get_KAN()
+        self.kan_implementation = config.kan_implementation
+        KAN = self.get_KAN()
 
         assert config.n_embd % config.n_head == 0
         # key, query, value projections for all heads, but in a batch
@@ -85,6 +76,16 @@ class CausalSelfAttention(nn.Module):
         )
         self.n_head = config.n_head
         self.n_embd = config.n_embd
+
+    def get_KAN(self):
+        if self.kan_implementation == "EFFICIENT_KAN":
+            KAN = EFFICIENT_KAN  # type: ignore
+        elif self.kan_implementation == "ORIGINAL_KAN":
+            KAN = ORIGINAL_KAN  # type: ignore
+        else:
+            raise NotImplementedError()
+
+        return KAN
 
     def forward(self, x):
         B, T, C = (
@@ -125,7 +126,8 @@ class Block(nn.Module):
 
     def __init__(self, config):
         super().__init__()
-        KAN = get_KAN()
+        self.kan_implementation = config.kan_implementation
+        KAN = self.get_KAN()
         self.ln_1 = nn.LayerNorm(config.n_embd)
         self.attn = CausalSelfAttention(config)
         self.ln_2 = nn.LayerNorm(config.n_embd)
@@ -141,6 +143,14 @@ class Block(nn.Module):
         self.mlpf = lambda x: m.dropout(
             m.c_proj(m.act(m.c_fc(x)))
         )  # MLP forward
+
+    def get_KAN(self):
+        if self.kan_implementation == "EFFICIENT_KAN":
+            KAN = EFFICIENT_KAN  # type: ignore
+        elif self.kan_implementation == "ORIGINAL_KAN":
+            KAN = ORIGINAL_KAN  # type: ignore
+
+        return KAN
 
     def forward(self, x):
         x = x + self.attn(self.ln_1(x))
@@ -167,6 +177,9 @@ class GPT(nn.Module):
         C.embd_pdrop = 0.1
         C.resid_pdrop = 0.1
         C.attn_pdrop = 0.1
+        C.attn_pdrop = 0.1
+        # KAN Implementation
+        C.kan_implementation = settings.kan.KAN_IMPLEMENTATION
         return C
 
     def __init__(self, config):
@@ -174,6 +187,7 @@ class GPT(nn.Module):
         assert config.vocab_size is not None
         assert config.block_size is not None
         self.block_size = config.block_size
+        self.kan_implementation = config.kan_implementation
 
         type_given = config.model_type is not None
         params_given = all(
@@ -228,7 +242,7 @@ class GPT(nn.Module):
                 ln_f=nn.LayerNorm(config.n_embd),
             )
         )
-        KAN = get_KAN()
+        KAN = self.get_KAN()
         self.lm_head = KAN(
             width=[config.n_embd, config.vocab_size], bias_trainable=False
         )
@@ -246,6 +260,14 @@ class GPT(nn.Module):
         # parameters in lm_head)
         n_params = sum(p.numel() for p in self.transformer.parameters())
         print("number of parameters: %.2fM" % (n_params / 1e6,))
+
+    def get_KAN(self):
+        if self.kan_implementation == "EFFICIENT_KAN":
+            KAN = EFFICIENT_KAN  # type: ignore
+        elif self.kan_implementation == "ORIGINAL_KAN":
+            KAN = ORIGINAL_KAN  # type: ignore
+
+        return KAN
 
     def kan_loss(
         self,
@@ -294,7 +316,7 @@ class GPT(nn.Module):
 
         total_reg = torch.tensor(0.0).to(device=x.device, dtype=torch.float32)
         size = 0
-        KAN = get_KAN()
+        KAN = self.get_KAN()
         for mod in self.modules():
             if isinstance(mod, KAN):
                 total_reg += reg(mod)
@@ -304,7 +326,7 @@ class GPT(nn.Module):
         return mean_reg
 
     def _init_weights(self, module):
-        KAN = get_KAN()
+        KAN = self.get_KAN()
         if isinstance(module, KAN):
             # torch.nn.init.normal_(module.weight, mean=0.0, std=0.02)
             # if module.bias is not None:
@@ -380,7 +402,7 @@ class GPT(nn.Module):
         # regularizing weight decay
         decay = set()
         no_decay = set()
-        KAN = get_KAN()
+        KAN = self.get_KAN()
         whitelist_weight_modules = (KAN,)
         blacklist_weight_modules = (torch.nn.LayerNorm, torch.nn.Embedding)
         for mn, m in self.named_modules():

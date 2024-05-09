@@ -1,5 +1,7 @@
+from tempfile import TemporaryDirectory
 import torch
 from kan_gpt.kan.KAN import KAN
+from kan_gpt.kan.utils import create_dataset
 
 
 def test_forward():
@@ -72,3 +74,25 @@ def test_backward_batched():
         if isinstance(param.grad, torch.Tensor):
             grad_set.add(param)
     assert len(grad_set) > 0, f"Tensor.grad missing"
+
+
+def test_plot():
+    model = KAN(width=[2, 3, 2, 1])
+    x = torch.normal(0, 1, size=(100, 1, 2))
+    model(x)
+    beta = 100
+    with TemporaryDirectory() as folder:
+        model.plot(beta=beta, folder=folder)
+
+
+def test_train():
+    f = lambda x: torch.exp(torch.sin(torch.pi * x[:, [0]]) + x[:, [1]] ** 2)
+    dataset = create_dataset(f, n_var=2)
+    dataset["train_input"].shape, dataset["train_label"].shape
+
+    model = KAN(width=[2, 1], grid=5, k=3, seed=0)
+    model.train_kan(dataset, opt="LBFGS", steps=1, lamb=0.1)
+    model.plot()
+    model.prune()
+    with TemporaryDirectory() as folder:
+        model.plot(mask=True, folder=folder)
