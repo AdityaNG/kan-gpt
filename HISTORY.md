@@ -4,6 +4,14 @@ Changelog
 
 (unreleased)
 ------------
+- Test(kan): coverage improved. [Aditya NG]
+- Docs(README,docs/): badges. [Aditya NG]
+- Docs(README.md): typo. [Aditya NG]
+
+
+1.0.0 (2024-05-09)
+------------------
+- Release: version 1.0.0 🚀 [Aditya NG]
 - Version increment. [Aditya NG]
 - Merge pull request #11 from wektorz/fix_missing_dataset_dowload.
   [Aditya]
