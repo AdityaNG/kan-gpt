@@ -1,2 +1,5 @@
 site_name: kan_gpt
 theme: readthedocs
+nav:
+  - 'index.md'
+  - 'results.md'

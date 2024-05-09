@@ -92,7 +92,7 @@ We train and compare KAN-GPT with an equivalent MLP-GPT model on the Tiny Shakes
 
 | Metrics |   |   |
 |---------|---------|---------|
-| <img src="media/results_loss.png"> | <img src="media/results_cross_entropy.png"> | <img src="media/results_perplexity.png"> |
+| ![results_loss](media/results_loss.png) | ![results_cross_entropy](media/results_cross_entropy.png) | ![results_perplexity](media/results_perplexity.png) |
 
 ## TODOs
 
