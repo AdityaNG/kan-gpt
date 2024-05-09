@@ -17,7 +17,7 @@ pip install kan_gpt
 
 ## Usage
 
-Refer to the [KAN_GPT.ipynb](KAN_GPT.ipynb) and [kan_gpt/prompt.py](kan_gpt/prompt.py) for usage examples. The following is an outine of how to use the model:
+Refer to the [KAN_GPT.ipynb](KAN_GPT.ipynb) and [kan_gpt/prompt.py](kan_gpt/prompt.py) for usage examples. The following is an outline of how to use the model:
 
 ```py
 from kan_gpt.model import GPT
