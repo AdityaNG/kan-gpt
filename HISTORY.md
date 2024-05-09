@@ -2,6 +2,22 @@ Changelog
 =========
 
 
+(unreleased)
+------------
+- Version increment. [Aditya NG]
+- Merge pull request #11 from wektorz/fix_missing_dataset_dowload.
+  [Aditya]
+
+  add missing dataset dowload to setup that caused train to fail in jupyter notebook
+- Update KAN_GPT.ipynb. [Wiktor Zdrojewski]
+
+  add missing dowload that caused train to fail
+- Docs(mkdocs): results added. [Aditya NG]
+- Docs(README,media): results and metrics. [Aditya NG]
+- Feat(train.py): metrics added. [Aditya NG]
+- Release: version 0.4.0 🚀 [Aditya NG]
+
+
 0.4.0 (2024-05-08)
 ------------------
 - Release: version 0.4.0 🚀 [Aditya NG]
