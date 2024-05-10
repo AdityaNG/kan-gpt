@@ -1,7 +1,7 @@
 # KAN-GPT
 
 ![PyPI - Downloads](https://img.shields.io/pypi/dd/kan-gpt)
-![PyPI - Version](https://img.shields.io/pypi/v/kan-gpt)
+[![PyPI - Version](https://img.shields.io/pypi/v/kan-gpt)](https://pypi.org/project/kan-gpt/)
 [![codecov](https://codecov.io/gh/AdityaNG/kan-gpt/branch/main/graph/badge.svg?token=kan-gpt_token_here)](https://codecov.io/gh/AdityaNG/kan-gpt)
 [![CI](https://github.com/AdityaNG/kan-gpt/actions/workflows/main.yml/badge.svg)](https://github.com/AdityaNG/kan-gpt/actions/workflows/main.yml)
 ![GitHub License](https://img.shields.io/github/license/AdityaNG/kan-gpt)
