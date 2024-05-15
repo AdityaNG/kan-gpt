@@ -4,6 +4,24 @@ Changelog
 
 (unreleased)
 ------------
+- Docs(README): absolute links. [Aditya NG]
+- Merge pull request #17 from KPCOFGS/main. [Aditya]
+
+  Update README.md
+- Update README.md. [Shixian Sheng]
+- Merge pull request #15 from eltociear/patch-1. [Aditya]
+
+  docs: Update README.md
+- Docs: Update README.md. [Ikko Eltociear Ashimine]
+
+  outine -> outline
+- Merge pull request #14 from TheMattBin/readme-update. [Aditya]
+- Update README.md. [Matthew Liu]
+
+
+1.0.1 (2024-05-09)
+------------------
+- Release: version 1.0.1 🚀 [Aditya NG]
 - Test(kan): coverage improved. [Aditya NG]
 - Docs(README,docs/): badges. [Aditya NG]
 - Docs(README.md): typo. [Aditya NG]
