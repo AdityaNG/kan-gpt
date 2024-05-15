@@ -4,7 +4,7 @@
 [![PyPI - Version](https://img.shields.io/pypi/v/kan-gpt)](https://pypi.org/project/kan-gpt/)
 [![codecov](https://codecov.io/gh/AdityaNG/kan-gpt/branch/main/graph/badge.svg?token=kan-gpt_token_here)](https://codecov.io/gh/AdityaNG/kan-gpt)
 [![CI](https://github.com/AdityaNG/kan-gpt/actions/workflows/main.yml/badge.svg)](https://github.com/AdityaNG/kan-gpt/actions/workflows/main.yml)
-![GitHub License](https://img.shields.io/github/license/AdityaNG/kan-gpt)
+[![GitHub License](https://img.shields.io/github/license/AdityaNG/kan-gpt)](https://github.com/AdityaNG/kan-gpt/blob/main/LICENSE)
 
 
 The PyTorch implementation of Generative Pre-trained Transformers (GPTs) using Kolmogorov-Arnold Networks (KANs) for language modeling
@@ -17,7 +17,7 @@ pip install kan_gpt
 
 ## Usage
 
-Refer to the [KAN_GPT.ipynb](KAN_GPT.ipynb) and [kan_gpt/prompt.py](kan_gpt/prompt.py) for usage examples. The following is an outline of how to use the model:
+Refer to the [KAN_GPT.ipynb](https://github.com/AdityaNG/kan-gpt/blob/main/KAN_GPT.ipynb) and [kan_gpt/prompt.py](https://github.com/AdityaNG/kan-gpt/blob/main/kan_gpt/prompt.py) for usage examples. The following is an outline of how to use the model:
 
 ```py
 from kan_gpt.model import GPT
@@ -128,7 +128,7 @@ We train and compare KAN-GPT with an equivalent MLP-GPT model on the Tiny Shakes
 
 ## Development
 
-Read the [CONTRIBUTING.md](CONTRIBUTING.md) file.
+Read the [CONTRIBUTING.md](https://github.com/AdityaNG/kan-gpt/blob/main/CONTRIBUTING.md) file.
 
 ## References
 
