@@ -4,6 +4,12 @@ Changelog
 
 (unreleased)
 ------------
+- Test(.coveragerc): excluded few files for now. [Aditya NG]
+
+
+1.0.2 (2024-05-15)
+------------------
+- Release: version 1.0.2 🚀 [Aditya NG]
 - Docs(README): absolute links. [Aditya NG]
 - Merge pull request #17 from KPCOFGS/main. [Aditya]
 
