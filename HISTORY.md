@@ -4,6 +4,12 @@ Changelog
 
 (unreleased)
 ------------
+- Docs(README): total downloads badge. [Aditya NG]
+
+
+1.0.3 (2024-05-17)
+------------------
+- Release: version 1.0.3 🚀 [Aditya NG]
 - Test(.coveragerc): excluded few files for now. [Aditya NG]
 
 
