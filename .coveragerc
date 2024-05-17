@@ -1,0 +1,2 @@
+[run]
+omit = kan_gpt/mingpt/bpe.py,kan_gpt/mingpt/utils.py,kan_gpt/sweep.py,kan_gpt/kan/KAN.py
