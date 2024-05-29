@@ -14,6 +14,21 @@ The PyTorch implementation of Generative Pre-trained Transformers (GPTs) using K
 pip install kan_gpt
 ```
 
+## Citation
+
+If you find our work useful cite us!
+
+```
+@misc{GANESH2024KANGPT,
+  author       = {Aditya Nalgunda Ganesh},
+  title        = {KAN-GPT: The PyTorch implementation of Generative Pre-trained Transformers (GPTs) using Kolmogorov-Arnold Networks (KANs) for language modeling},
+  year         = {2024},
+  month        = {May},
+  note         = {Release 1.0.0, 9th May 2024},
+  url          = {https://github.com/AdityaNG/kan-gpt/}
+}
+```
+
 ## Usage
 
 Refer to the [KAN_GPT.ipynb](https://github.com/AdityaNG/kan-gpt/blob/main/KAN_GPT.ipynb) and [kan_gpt/prompt.py](https://github.com/AdityaNG/kan-gpt/blob/main/kan_gpt/prompt.py) for usage examples. The following is an ourtine of how to use the model:
