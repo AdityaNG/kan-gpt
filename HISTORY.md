@@ -4,6 +4,12 @@ Changelog
 
 (unreleased)
 ------------
+- Docs(README): citation. [Aditya NG]
+
+
+1.0.4 (2024-05-17)
+------------------
+- Release: version 1.0.4 🚀 [Aditya NG]
 - Docs(README): total downloads badge. [Aditya NG]
 
 
