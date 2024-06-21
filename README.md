@@ -57,7 +57,7 @@ x = torch.tensor(prompt_encoded).unsqueeze(0)
 model.eval()
 y = model.generate(x, 50)  # sample 50 tokens
 
-result = tokenizer.decode(y)
+result = tokenizer.decode(y[0])
 
 print(result)
 
