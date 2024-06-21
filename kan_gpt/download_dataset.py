@@ -44,8 +44,8 @@ def main(args):
         download_webtext()
     elif args.dataset == "tinyshakespeare":
         download_tinyshakespeare()
-
-    raise NotImplementedError
+    else:
+        raise NotImplementedError
 
 
 if __name__ == "__main__":
