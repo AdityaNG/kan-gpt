@@ -4,12 +4,12 @@ from typing import Union
 
 import numpy as np
 import torch
+import wandb
 from torch.nn import functional as F
 from torch.utils.data.dataloader import DataLoader
 from wandb.sdk.lib import RunDisabled
 from wandb.sdk.wandb_run import Run
 
-import wandb
 from kan_gpt.dataset import TinyShakespeareDataset, WebTextDataset
 from kan_gpt.mingpt.model import GPT as MLP_GPT
 from kan_gpt.mingpt.trainer import Trainer
