@@ -4,6 +4,32 @@ Changelog
 
 (unreleased)
 ------------
+
+Fix
+~~~
+- NotImplementedError in download_dataset. [yumemio]
+
+Other
+~~~~~
+- Merge pull request #22 from yumemio/main. [Aditya]
+
+  fix: `NotImplementedError` in download_dataset
+- Merge pull request #23 from AdityaNG/fix/21_relax_requirements.
+  [Aditya]
+
+  fix(requirements.txt): relaxed
+- Fix(requirements.txt): relaxed. [Aditya NG]
+- Merge pull request #20 from gyunggyung/patch-1. [Aditya]
+- Update README.md. [gyunggyung]
+
+  result = tokenizer.decode(y[0])
+
+  You have to do it like this to make it work.
+
+
+1.0.5 (2024-05-29)
+------------------
+- Release: version 1.0.5 🚀 [Aditya NG]
 - Docs(README): citation. [Aditya NG]
 
 
