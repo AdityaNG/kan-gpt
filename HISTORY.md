@@ -4,6 +4,11 @@ Changelog
 
 (unreleased)
 ------------
+- Feat(kan_gpt/dataset.py): mnist suppport. [Aditya NG]
+
+
+1.1.0 (2024-07-14)
+------------------
 
 Fix
 ~~~
@@ -11,6 +16,7 @@ Fix
 
 Other
 ~~~~~
+- Release: version 1.1.0 🚀 [Aditya NG]
 - Merge pull request #22 from yumemio/main. [Aditya]
 
   fix: `NotImplementedError` in download_dataset
