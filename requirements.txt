@@ -9,3 +9,4 @@ pandas>=2.0.3
 requests>=2.31.0
 transformers>=4.40.1
 wandb>=0.16.6
+torchvision

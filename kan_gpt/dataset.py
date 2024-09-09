@@ -4,6 +4,7 @@ import pickle
 import pandas as pd
 import torch
 from torch.utils.data import Dataset
+from torchvision import datasets, transforms
 from tqdm import tqdm
 from transformers import GPT2Tokenizer
 
@@ -186,5 +187,66 @@ class TinyShakespeareDataset(Dataset):
 
         # x = x.unsqueeze(0)
         # y = y.unsqueeze(0)
+
+        return x, y
+
+
+class MNISTDataset(Dataset):
+    """
+    MNIST Dataset for Transformer (GPT-style) processing
+    """
+
+    def __init__(self, split, model_type, block_size=784):  # 784 + 1 for label
+        assert split in {"train", "test"}
+
+        self.split = split
+        self.block_size = block_size
+        self.model_type = model_type
+
+        # Load MNIST dataset
+        dataset = datasets.MNIST(
+            root="./data",
+            train=(split == "train"),
+            download=True,
+            transform=transforms.Compose(
+                [
+                    transforms.ToTensor(),
+                    # transforms.Normalize((0.1307,), (0.3081,)),
+                ]
+            ),
+        )
+
+        self.data = []
+
+        for img, label in dataset:
+            # Flatten the image
+            flattened_img = img.view(-1)
+            # Convert to integer values (0-255)
+            flattened_img = (flattened_img * 255).long()
+
+            # Append label to the end of flattened image
+            sample = torch.cat([flattened_img, torch.tensor([label])])
+
+            # Pad with zeros to reach block_size
+            if len(sample) < self.block_size:
+                padding = torch.zeros(
+                    self.block_size - len(sample), dtype=torch.long
+                )
+                sample = torch.cat([sample, padding])
+
+            self.data.append(sample)
+
+    def __len__(self):
+        return len(self.data)
+
+    def get_vocab_size(self):
+        return 256  # 0-255 pixel values + 10 classes + 1 padding token
+
+    def get_block_size(self):
+        return self.block_size
+
+    def __getitem__(self, idx):
+        x = self.data[idx][:-1]  # Input: all but last token
+        y = self.data[idx][1:]  # Target: all but first token
 
         return x, y

@@ -74,8 +74,9 @@ cd kan-gpt
 git pull
 
 # Download Dataset
-./scripts/download_webtext.sh
-./scripts/download_tinyshakespeare.sh
+python3 -m kan_gpt.download_dataset --dataset tinyshakespeare
+python3 -m kan_gpt.download_dataset --dataset mnist
+python3 -m kan_gpt.download_dataset --dataset webtext
 
 # Install dependencies for development
 pip install -r requirements.txt

@@ -1,6 +1,6 @@
 import torch
-import wandb
 
+import wandb
 from kan_gpt.train import main
 
 

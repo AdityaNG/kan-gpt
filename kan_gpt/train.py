@@ -4,13 +4,17 @@ from typing import Union
 
 import numpy as np
 import torch
-import wandb
 from torch.nn import functional as F
 from torch.utils.data.dataloader import DataLoader
 from wandb.sdk.lib import RunDisabled
 from wandb.sdk.wandb_run import Run
 
-from kan_gpt.dataset import TinyShakespeareDataset, WebTextDataset
+import wandb
+from kan_gpt.dataset import (
+    MNISTDataset,
+    TinyShakespeareDataset,
+    WebTextDataset,
+)
 from kan_gpt.mingpt.model import GPT as MLP_GPT
 from kan_gpt.mingpt.trainer import Trainer
 from kan_gpt.model import GPT as KAN_GPT
@@ -83,13 +87,11 @@ def eval_split(
         x = x.to(trainer.device)
         y = y.to(trainer.device)
 
-        block_size = y.shape[1]
-
         logits, loss = model(x, y)
 
         probs = F.softmax(logits, dim=-1)
 
-        _, y_pred = torch.topk(probs, k=block_size, dim=-1)
+        # _, y_pred = torch.topk(probs, k=block_size, dim=-1)
 
         perplexity, f1, precision, recall, cross_entropy = metrics(
             y=y.cpu().numpy(), y_pred=probs.cpu().numpy()
@@ -148,6 +150,8 @@ def main(args, run=None):
         Dataset = WebTextDataset
     elif args.dataset == "tinyshakespeare":
         Dataset = TinyShakespeareDataset
+    elif args.dataset == "mnist":
+        Dataset = MNISTDataset
 
     # print an example instance of the dataset
     if args.dummy_dataset:
@@ -287,13 +291,13 @@ if __name__ == "__main__":
     parser.add_argument("--model_type", default="gpt-mini")
     parser.add_argument("--dummy_dataset", action="store_true")
     parser.add_argument("--learning_rate", default=5e-3)
-    parser.add_argument("--max_iters", default=2000)
+    parser.add_argument("--max_iters", default=32000)
     parser.add_argument("--num_workers", default=0)
-    parser.add_argument("--batch_size", default=64)
+    parser.add_argument("--batch_size", default=2)
 
     parser.add_argument(
         "--dataset",
-        choices=["webtext", "tinyshakespeare"],
+        choices=["webtext", "tinyshakespeare", "mnist"],
         default="tinyshakespeare",
     )
     parser.add_argument(
